@@ -5,7 +5,7 @@ An Ethereum based anchoring service. Master sends the messages one by one while 
 After a few tests I remarked that sending them one by one seems more time efficient.
 
 ## Documentation and requirements
-This projects uses python 2.7 and the libraries needed are the following :
+This projects uses python 3.7 and the libraries needed are the following :
 ethereum, json, sys, random, boto3 and argparse. Working with a venv is recommended.
 
 You can find documentation about elasticmq here : https://github.com/adamw/elasticmq 
