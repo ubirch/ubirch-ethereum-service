@@ -6,8 +6,8 @@ import random
 import argparse
 import time  # for testing
 
-sys.path.insert(0, 'Library')
-import ElasticMQ_Connection as EMQ
+
+import Library.ElasticMQ_Connection as EMQ
 
 parser = argparse.ArgumentParser(description='Ubirch iota anchoring service')
 
@@ -31,4 +31,9 @@ aws_access_key_id = args.keyid
 queue1 = EMQ.getQueue('queue1', url, region, aws_secret_access_key, aws_access_key_id)
 queue2 = EMQ.getQueue('queue2', url, region, aws_secret_access_key, aws_access_key_id)
 errorQueue = EMQ.getQueue('errorQueue', url, region, aws_secret_access_key, aws_access_key_id)
+
+
+
+
+
 
