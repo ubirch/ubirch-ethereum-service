@@ -5,13 +5,14 @@
 
 import boto3
 
+
 def connect(url, region, aws_secret_access_key, aws_access_key_id):
     client = boto3.resource('sqs',
-                          endpoint_url=url,  #
-                          region_name=region,  #
-                          aws_secret_access_key=aws_secret_access_key,  # parameters passed as arguments
-                          aws_access_key_id=aws_access_key_id,  #
-                          use_ssl=False)
+                            endpoint_url=url,  #
+                            region_name=region,  #
+                            aws_secret_access_key=aws_secret_access_key,  # parameters passed as arguments
+                            aws_access_key_id=aws_access_key_id,  #
+                            use_ssl=False)
     return client
 
 
