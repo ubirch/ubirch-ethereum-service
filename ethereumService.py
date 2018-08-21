@@ -48,16 +48,18 @@ import web3
 
 w3 = Web3(HTTPProvider("https://ropsten.infura.io/v3/966a3923b3bb4df29cb31db87901700b")) #Infura hosted node : linked to my infura account
 
-# Created via MyEtherWallet.com
-# Ether can be mined or demanded through the Ropsten Faucet
+# Created via MyEtherWallet.com  / Ether can be mined or demanded through the Ropsten Faucet
 
+# # MEW address
 # sender_address = "0x8e0efc639A218c502542E0A8f0213feF50a45c06"
 # sender_private_key = '6647b8834bc0a9d3e494dc1ecaed8bdde02820e4db45275b26ce0080b2c0f8f9'
 
 receiver_address = '0x216913375bA97E1E51E0018A9bbF1378350bDB63'
 
+# MetaMask address
 sender_address = Web3.toChecksumAddress('0x7fd1e740c2280c454d4d9c1585da9ccdd13cbcdc')
 sender_private_key = '45202060464c0f2f789d12da40422d878db3c5c58e69de9c4ea1b441df48d160'
+
 
 
 # myAccount = w3.eth.account.create('put some extra entropy here')
@@ -76,76 +78,40 @@ def main(storefunction):
         service.poll(queue1, errorQueue, queue2, storefunction)
 
 
-# def storeStringETH(string):
-#     if service.is_hex(string):
-#         nonce = w3.eth.getTransactionCount(sender_address)
-#         txn_dict = { # Note that the address must be in checksum format
-#             'to': receiver_address,
-#             'from': sender_address,
-#             'value': 50000000000,
-#             'gas': 2000000,
-#             'gasPrice': w3.toWei('40', 'gwei'),
-#             'nonce': nonce,
-#             'chainId': 20
-#         }
-#         signed_txn = w3.eth.account.signTransaction(txn_dict, sender_private_key)
-#         print(signed_txn)
-#
-#         #w3.eth.sendTransaction(txn_dict) not allowed by infura
-#
-#         txn_hash = w3.eth.sendRawTransaction(signed_txn.rawTransaction)
-#         print(binascii.hexlify(txn_hash))
-#
-#         txn_receipt = None
-#         count = 0
-#         while txn_receipt is None and (count < 30):
-#             txn_receipt = w3.eth.getTransactionReceipt(txn_hash)
-#
-#             print(txn_receipt)
-#
-#             time.sleep(10)
-#
-#         if txn_receipt is None:
-#             return {'status': 'failed', 'error': 'timeout'}
-#
-#         return {'status': 'added', 'txn_receipt': txn_receipt, 'txn_hash': binascii.hexlify(txn_hash)}
-#
-#     else:
-#         return False
-
 def storeStringETH(string):
     if service.is_hex(string):
-        txn_dict = { # Note that the address must be in checksum format
+        nonce = w3.eth.getTransactionCount(sender_address)
+        txn_dict = {                                        # Note that the address must be in checksum format ( Web3.toChecksumAddress(lower case address) to convert
             'to': receiver_address,
-          #  'from': sender_address,
-            'value': 1000000000000,
-            'gas': 200000,
+            'from': sender_address,
+            'value': 50000000000,
+            'gas': 2000000,
             'gasPrice': w3.toWei('40', 'gwei'),
-            'nonce': 0,
-            'chainId': 20
+            'nonce': nonce,
+            'chainId': 3
         }
         signed_txn = w3.eth.account.signTransaction(txn_dict, sender_private_key)
-        print(signed_txn)
-
         txn_hash = w3.eth.sendRawTransaction(signed_txn.rawTransaction)
-        print(binascii.hexlify(txn_hash))
 
-        txn_receipt = None
-        count = 0
-        while txn_receipt is None and (count < 30):
-            txn_receipt = w3.eth.getTransactionReceipt(txn_hash)
+        return {'message': string, 'txn_hash': binascii.hexlify(txn_hash)}
 
-            print(txn_receipt)
-
-            time.sleep(10)
-
-        if txn_receipt is None:
-            return {'status': 'failed', 'error': 'timeout'}
-
-        return {'status': 'added', 'txn_receipt': txn_receipt, 'txn_hash': binascii.hexlify(txn_hash)}
+        # # Uncomment to wait for the tx to be anchored before continuing
+        #
+        # txn_receipt = None
+        # count = 0
+        # while txn_receipt is None and (count < 30):
+        #     txn_receipt = w3.eth.getTransactionReceipt(txn_hash)
+        #
+        #     print(txn_receipt)
+        #
+        #     time.sleep(10)
+        #
+        # if txn_receipt is None:
+        #     return {'status': 'failed', 'error': 'timeout'}
+        #
+        # return {'status': 'added', 'txn_receipt': txn_receipt, 'txn_hash': binascii.hexlify(txn_hash)}
 
     else:
         return False
 
-
-storeStringETH("abc")
+main(storeStringETH)
