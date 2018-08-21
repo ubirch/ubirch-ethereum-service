@@ -49,7 +49,6 @@ def poll(queue1, errorQueue, queue2, storefunction):
         print("processing time = " + str(time.time() - start3))
 
 
-
 def process_message(m, errorQueue, queue2, storefunction):
     a = time.time()
     storing = storefunction(m.body)

@@ -1,7 +1,7 @@
 # TO START THE SERVE
 
 #  See custom.conf for more details
-# execute : java -Dconfig.file=custom.conf -jar elasticmq-server-XXX.jar
+# execute in the shell : java -Dconfig.file=custom.conf -jar elasticmq-server-XXX.jar
 
 import boto3
 
