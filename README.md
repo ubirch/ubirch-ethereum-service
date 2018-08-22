@@ -8,14 +8,28 @@ After a few tests I remarked that sending them one by one seems more time effici
 This projects uses python 3.7 and the libraries needed are the following :
 ethereum, json, sys, random, boto3 and argparse. Working with a venv is recommended.
 
-You can find documentation about elasticmq here : https://github.com/adamw/elasticmq 
+-Elasticmq documentation : https://github.com/adamw/elasticmq 
 
-You can find documentation about pyethereum here : https://github.com/ethereum/pyethereum
+-Pyethereum :
+        
+        git clone https://github.com/ethereum/pyethereum
+        cd pyethereum
+        sudo pip install -r requirements.txt
+        sudo python setup.py install
+        cd ..
+
+-Serpent library (used to write contracts):
+        
+        git clone https://github.com/ethereum/serpent
+        cd serpent
+        make && sudo make install
+        sudo python setup.py install
+        cd ..
 
 
 ## How to use this service :
 
-1. Set up the elasticmq server : https://github.com/adamw/elasticmq 
+1. Set up the elasticmq server : see https://github.com/adamw/elasticmq 
 
 2. Create a custom.conf so it looks like this :
 
