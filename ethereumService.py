@@ -56,6 +56,8 @@ sender_private_key = '45202060464c0f2f789d12da40422d878db3c5c58e69de9c4ea1b441df
 
 receiver_address = '0x216913375bA97E1E51E0018A9bbF1378350bDB63'
 
+print('sender address :', sender_address)
+print('receiver address', receiver_address)
 print('sender balance (in Wei):', w3.eth.getBalance(sender_address))
 
 # Anchors a hash from queue1
@@ -83,34 +85,30 @@ def storeStringETH(string):
             'nonce': nonce,
             'chainId': 3        # 3 is the chainId of the Ropsten testnet
         }
+
         signed_txn = w3.eth.account.signTransaction(txn_dict, sender_private_key)
 
         txn_hash = w3.eth.sendRawTransaction(signed_txn.rawTransaction)
         txn_hash_str = binascii.hexlify(txn_hash).decode('utf-8')
 
-        print({'txid': txn_hash_str, 'message': string})
-        return {'txid': txn_hash_str, 'message': string}
+        print({'status': 'added', 'txid': txn_hash_str, 'message': string})
 
+        txn_receipt = None
+        count = 0
+        while txn_receipt is None and (count < 30):
+            txn_receipt = w3.eth.getTransactionReceipt(txn_hash)
+            print(txn_receipt)
+            count +=1
+            time.sleep(10)
 
-        # # Uncomment to wait for the tx to be anchored before continuing
-        #
-        # txn_receipt = None
-        # count = 0
-        # while txn_receipt is None and (count < 30):
-        #     txn_receipt = w3.eth.getTransactionReceipt(txn_hash)
-        #
-        #     print(txn_receipt)
-        #
-        #     time.sleep(10)
-        #
-        # if txn_receipt is None:
-        #     return {'status': 'failed', 'error': 'timeout'}
-        #
-        # return {'status': 'added', 'txn_receipt': txn_receipt, 'txid': txn_hash_str}
+        if txn_receipt is None:
+            print({'status': 'timeout', 'message': string})
+            return {'status': 'timeout', 'message': string}
+
+        return {'status': 'added', 'txid': txn_hash_str, 'message': string}
 
     else:
         return False
 
-service.poll(queue1, errorQueue, queue2, storeStringETH)
 
-#main(storeStringETH)
+main(storeStringETH)

@@ -41,6 +41,10 @@ def process_message(m, errorQueue, queue2, storefunction):
         json_error = json.dumps({"Not a hash": m.body})
         send(errorQueue, json_error)
 
+    elif storingResult['status'] == 'timeout':
+        json_error = json.dumps(storingResult)
+        send(errorQueue, json_error)
+
     else:
         json_data = json.dumps(storingResult)
         send(queue2, json_data)

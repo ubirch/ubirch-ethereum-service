@@ -16,8 +16,8 @@ aws_access_key_id = args.keyid
 
 queue1 = EMQ.getQueue('queue1', url, region, aws_secret_access_key, aws_access_key_id)
 
-i = 0.5
-j = 0.5
+i = 1
+j = 1
 while True:
     t = str(time.time()).encode('utf-8')
     message = hashlib.sha256(t).hexdigest()
