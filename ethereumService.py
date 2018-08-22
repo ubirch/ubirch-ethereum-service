@@ -6,7 +6,6 @@ import time
 import binascii
 
 
-
 args = service.set_arguments("ethereum")
 
 url = args.url
@@ -48,28 +47,20 @@ import web3
 
 w3 = Web3(HTTPProvider("https://ropsten.infura.io/v3/966a3923b3bb4df29cb31db87901700b")) #Infura hosted node : linked to my infura account
 
-# Created via MyEtherWallet.com  / Ether can be mined or demanded through the Ropsten Faucet
+# TODO : WALLET MANAGEMENT
 
-# # MEW address
-# sender_address = "0x8e0efc639A218c502542E0A8f0213feF50a45c06"
-# sender_private_key = '6647b8834bc0a9d3e494dc1ecaed8bdde02820e4db45275b26ce0080b2c0f8f9'
+# Created via MyEtherWallet.com or MetaMask / Ether can be mined or demanded through the Ropsten Faucet
 
-receiver_address = '0x216913375bA97E1E51E0018A9bbF1378350bDB63'
-
-# MetaMask address
 sender_address = Web3.toChecksumAddress('0x7fd1e740c2280c454d4d9c1585da9ccdd13cbcdc')
 sender_private_key = '45202060464c0f2f789d12da40422d878db3c5c58e69de9c4ea1b441df48d160'
 
+receiver_address = '0x216913375bA97E1E51E0018A9bbF1378350bDB63'
 
+print('sender balance (in Wei):', w3.eth.getBalance(sender_address))
 
-# myAccount = w3.eth.account.create('put some extra entropy here')
-# myAddress = myAccount.address
-# myPrivateKey = myAccount.privateKey
-# print('my address is     : {}'.format(myAccount.address))
-# print('my private key is : {}'.format(myAccount.privateKey.hex()))
-
-
-print(w3.eth.getBalance(sender_address))
+# Anchors a hash from queue1
+# Sends the TxID + hash (json file) in queue2 and errors are sent in errorQueue
+# Runs continuously (check if messages are available in queue1)
 
 
 def main(storefunction):
@@ -81,10 +72,12 @@ def main(storefunction):
 def storeStringETH(string):
     if service.is_hex(string):
         nonce = w3.eth.getTransactionCount(sender_address)
+        print("Nonce = ", nonce)
         txn_dict = {                                        # Note that the address must be in checksum format ( Web3.toChecksumAddress(lower case address) to convert
             'to': receiver_address,
-            'from': sender_address,
-            'value': 50000000000,
+            'from': sender_address,                         #from is an optional field
+            'value': 600000000000,
+            'data': string,
             'gas': 2000000,
             'gasPrice': w3.toWei('40', 'gwei'),
             'nonce': nonce,
@@ -93,7 +86,10 @@ def storeStringETH(string):
         signed_txn = w3.eth.account.signTransaction(txn_dict, sender_private_key)
         txn_hash = w3.eth.sendRawTransaction(signed_txn.rawTransaction)
 
-        return {'message': string, 'txn_hash': binascii.hexlify(txn_hash)}
+        print({'txid': binascii.hexlify(txn_hash), 'hash': string})
+
+        return {'txid': binascii.hexlify(txn_hash), 'hash': string}
+
 
         # # Uncomment to wait for the tx to be anchored before continuing
         #
@@ -114,4 +110,5 @@ def storeStringETH(string):
     else:
         return False
 
-main(storeStringETH)
+
+service.poll(queue1, errorQueue, queue2, storeStringETH)

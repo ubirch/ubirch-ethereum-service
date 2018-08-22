@@ -4,6 +4,7 @@ import time
 import json
 import argparse
 
+
 # Anchors a hash from from queue1
 # Sends the TxID + hash (json file) in queue2 and errors are sent in errorQueue
 
@@ -42,32 +43,64 @@ def poll(queue1, errorQueue, queue2, storefunction):
     start = time.time()
     messages = queue1.receive_messages()  # Note: MaxNumberOfMessages default is 1.
     start2 = time.time()
-    print("receiving time : " + str(start2 - start))
+    # print("receiving time : " + str(start2 - start))
     for m in messages:
         start3 = time.time()
         process_message(m, errorQueue, queue2, storefunction)
-        print("processing time = " + str(time.time() - start3))
+    #    print("processing time = " + str(time.time() - start3))
+
+
+# def process_message(m, errorQueue, queue2, storefunction):
+#     a = time.time()
+#     storing = storefunction(m.body)                             # Storefunction has to return False if the message is non-hex
+#    # print("storing = " + str(time.time() - a))
+#     if storing == False:
+#         json_error = json.dumps({"Not a hash" : m.body})
+#         b = time.time()
+#         send(errorQueue, json_error)
+#     #    print("sending error = " + str(time.time() - b))
+#
+#     else:
+#         transactionHashes = storing
+#         for txid in transactionHashes:  # In case of the anchoring results in several transactions
+#             json_data = json.dumps({"tx" : str(txid), "hash" : m.body})
+#             c = time.time()
+#             send(queue2, json_data)
+#     #        print("sending message= " + str(time.time() - c))
+#
+#     m.delete()
 
 
 def process_message(m, errorQueue, queue2, storefunction):
-    a = time.time()
-    storing = storefunction(m.body)
-    print("storing = " + str(time.time() - a))
-    if storing == False:
-        json_error = json.dumps({"Not a hash" : m.body})
-        b = time.time()
+    if storefunction == storeString:
+        process_message_IOTA(m, storefunction, errorQueue, queue2)
+
+    elif storefunction == storeStringETH:
+        process_message_ETH(m, storefunction, errorQueue, queue2)
+
+
+def process_message_IOTA(m, storefunction, errorQueue, queue2):
+    storingResult = storefunction(m.body)
+    if storingResult == False:
+        json_error = json.dumps({"Not a hash": m.body})
         send(errorQueue, json_error)
-        print("sending error = " + str(time.time() - b))
 
     else:
-        transactionHashes = storing
-        for txid in transactionHashes:  # In case of the anchoring results in several transactions
-            json_data = json.dumps({"tx" : str(txid), "hash" : m.body})
-            c = time.time()
+        for txid in storingResult:
+            json_data = json.dumps({"tx": str(txid), "hash": m.body})
             send(queue2, json_data)
-            print("sending message= " + str(time.time() - c))
 
     m.delete()
 
 
+def process_message_ETH(m, storefunction, errorQueue, queue2):
+    storingResult = storefunction(m.body)       # Storefunction has to return False if the message is non-hex
+    if storingResult == False:
+        json_error = json.dumps({"Not a hash": m.body})
+        send(errorQueue, json_error)
 
+    else:
+        json_data = json.dumps(storingResult)
+        send(queue2, json_data)
+
+    m.delete()

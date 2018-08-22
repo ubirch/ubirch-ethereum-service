@@ -1,9 +1,8 @@
 # coding: utf-8
-
-#Retrieves Json (message sent + txid) & error messages after anchoring into the Ethereum Blockchain
-
 import Library.ElasticMQ_Connection as EMQ
 import Library.serviceLibrary as service
+
+#Retrieves Json (message sent & txid) document
 
 args = service.set_arguments("ethereum")
 url = args.url
