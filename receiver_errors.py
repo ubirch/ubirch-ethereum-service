@@ -1,9 +1,8 @@
 # coding: utf-8
-
-#Retrieves Json (message sent + txid) & error messages after anchoring into the IOTA Blockchain
-
 import Library.ElasticMQ_Connection as EMQ
 import Library.serviceLibrary as service
+
+# Retrieves error messages
 
 args = service.set_arguments("ethereum")
 url = args.url
