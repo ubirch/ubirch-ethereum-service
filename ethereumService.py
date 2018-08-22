@@ -75,20 +75,21 @@ def storeStringETH(string):
         print("Nonce = ", nonce)
         txn_dict = {                                        # Note that the address must be in checksum format ( Web3.toChecksumAddress(lower case address) to convert
             'to': receiver_address,
-            'from': sender_address,                         #from is an optional field
+            'from': sender_address,                         # from is an optional field
             'value': 600000000000,
             'data': string,
             'gas': 2000000,
             'gasPrice': w3.toWei('40', 'gwei'),
             'nonce': nonce,
-            'chainId': 3
+            'chainId': 3        # 3 is the chainId of the Ropsten testnet
         }
         signed_txn = w3.eth.account.signTransaction(txn_dict, sender_private_key)
+
         txn_hash = w3.eth.sendRawTransaction(signed_txn.rawTransaction)
+        txn_hash_str = binascii.hexlify(txn_hash).decode('utf-8')
 
-        print({'txid': binascii.hexlify(txn_hash), 'hash': string})
-
-        return {'txid': binascii.hexlify(txn_hash), 'hash': string}
+        print({'txid': txn_hash_str, 'message': string})
+        return {'txid': txn_hash_str, 'message': string}
 
 
         # # Uncomment to wait for the tx to be anchored before continuing
@@ -105,10 +106,11 @@ def storeStringETH(string):
         # if txn_receipt is None:
         #     return {'status': 'failed', 'error': 'timeout'}
         #
-        # return {'status': 'added', 'txn_receipt': txn_receipt, 'txn_hash': binascii.hexlify(txn_hash)}
+        # return {'status': 'added', 'txn_receipt': txn_receipt, 'txid': txn_hash_str}
 
     else:
         return False
 
-
 service.poll(queue1, errorQueue, queue2, storeStringETH)
+
+#main(storeStringETH)
