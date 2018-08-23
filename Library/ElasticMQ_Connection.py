@@ -1,4 +1,4 @@
-# TO START THE SERVE
+# TO START THE SERVER
 
 #  See custom.conf for more details
 # execute in the shell : java -Dconfig.file=custom.conf -jar elasticmq-server-XXX.jar
