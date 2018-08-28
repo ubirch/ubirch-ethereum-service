@@ -3,9 +3,38 @@
 import time
 import json
 import argparse
+import boto3
+
+
+#  See custom.conf for more details
+# execute in the shell : java -Dconfig.file=custom.conf -jar elasticmq-server-XXX.jar
+
+
+
+def connect(url, region, aws_secret_access_key, aws_access_key_id):
+    """Connects to the SQS server related to those credentials.
+    Execute before java -Dconfig.file=custom.conf -jar elasticmq-server-XXX.jar """
+    client = boto3.resource('sqs',
+                            endpoint_url=url,  #
+                            region_name=region,  #
+                            aws_secret_access_key=aws_secret_access_key,  # parameters passed as arguments
+                            aws_access_key_id=aws_access_key_id,  #
+                            use_ssl=False)
+    return client
+
+
+def getQueue(queue_name, url, region, aws_secret_access_key, aws_access_key_id):
+    """Returns the queue with the name queue_name of the server identified by the other parameters"""
+    client = connect(url, region, aws_secret_access_key, aws_access_key_id)
+    queue = client.get_queue_by_name(QueueName=queue_name)
+    print("The queue : " + queue_name + " has : " + queue.url + " for URL")
+    return queue
+
 
 def set_arguments(servicetype):
-    parser = argparse.ArgumentParser(description="Ubirch" + servicetype + "anchoring service")
+    """Set up the credentials of connection to be those of the elasticMQ Server if not specified otherwise"""
+
+    parser = argparse.ArgumentParser(description="Ubirch " + servicetype + " anchoring service")
     parser.add_argument('-u', '--url',
                         help="endpoint url of the sqs server, input localhost:9324 for local connection (default)",
                         metavar="URL", type=str, default="http://localhost:9324")
@@ -19,12 +48,14 @@ def set_arguments(servicetype):
 
 
 def send(queue, msg):
+    """ Sends a message to the queue, return a SQS.Message element"""
     return queue.send_message(
         MessageBody=msg
     )
 
 
 def is_hex(s):
+    """Tests if the string s is hex (True) or not (False)"""
     try:
         int(s, 16)
         return True
@@ -32,8 +63,11 @@ def is_hex(s):
         return False
 
 
-# storefunction should always return either False is the string is non-hex or {'txid': hash, 'hash': string}
+# storefunction should always return either False is the string is non-hex or a dict containing {'txid': hash, 'hash': string}
 def process_message(m, errorQueue, queue2, storefunction):
+    """Anchors the message m in a DLT specified by the storefunction parameter.
+    Sends error (non hex message and timeouts) in the errorQueue.
+    Sends JSON docs containing the txid and the input data in queue2 if the anchoring was successful"""
     t0 = time.time()
     storingResult = storefunction(m.body) #Anchoring of the message body
     print("anchoring time = " + str(time.time() - t0))
@@ -53,6 +87,7 @@ def process_message(m, errorQueue, queue2, storefunction):
 
 
 def poll(queue1, errorQueue, queue2, storefunction):
+    """Process messages received from queue1"""
     messages = queue1.receive_messages()  # Note: MaxNumberOfMessages default is 1.
     for m in messages:
         t0 = time.time()

@@ -1,5 +1,5 @@
 # coding: utf-8
-import Library.ElasticMQ_Connection as EMQ
+
 import Library.serviceLibrary as service
 
 # Retrieves error messages
@@ -10,7 +10,7 @@ region = args.region
 aws_secret_access_key = args.accesskey
 aws_access_key_id = args.keyid
 
-errorQueue = EMQ.getQueue('errorQueue', url, region, aws_secret_access_key, aws_access_key_id)
+errorQueue = service.getQueue('errorQueue', url, region, aws_secret_access_key, aws_access_key_id)
 
 while True:
     errors = errorQueue.receive_messages()
