@@ -17,62 +17,24 @@ errorQueue = service.getQueue('errorQueue', url, region, aws_secret_access_key, 
 
 
 """
-Wallets:
-The testnet wallets were created using the client Metamask in the Chrome browser
 
-Node: Finally, because we’re going to be working with the Ropsten TestNet without hosting our own node, 
-we need a provider that we can connect the Blockchain through. Infura.io works well for this, so go and create a free 
-account over there. Note down your provider url for the Ropsten TestNet. 
-
-Transaction: The transaction parameter should be a dictionary with the following fields. from: bytes or text, 
-hex address or ENS name - (optional, default: web3.eth.defaultAccount) The address the transaction is send from. to: 
-bytes or text, hex address or ENS name - (optional when creating new contract) The address the transaction is 
-directed to. gasPrice: integer - (optional, default: To-Be-Determined) Integer of the gasPrice used for each paid gas 
-value: integer - (optional) Integer of the value send with this transaction data: bytes or text - The compiled code 
-of a contract OR the hash of the invoked method signature and encoded parameters. For details see Ethereum Contract 
-ABI. nonce: integer - (optional) Integer of a nonce. This allows to overwrite your own pending transactions that use 
-the same nonce. 
-
-If the transaction specifies a data value but does not specify gas then the gas value will be populated using the 
-estimateGas() function with an additional buffer of 100000 gas up to the gasLimit of the latest block. In the event 
-that the value returned by estimateGas() method is greater than the gasLimit a ValueError will be raised. 
+https://medium.com/mercuryprotocol/how-to-create-your-own-private-ethereum-blockchain-dad6af82fc9f
 
 """
 
 from web3 import Web3, HTTPProvider
 
 
-w3 = Web3(HTTPProvider("https://ropsten.infura.io/v3/966a3923b3bb4df29cb31db87901700b")) #Infura hosted node : linked to my infura account
-# w3 = Web3(HTTPProvider("https://rinkeby.infura.io/v3/966a3923b3bb4df29cb31db87901700b")) #Infura hosted node : linked to my infura account
-
-
 # GETH
 # geth --rinkeby --rpc --rpcaddr 0.0.0.0 --rpcport 8545 --rpccorsdomain "*" console
 # geth --testnet --fast --rpc --rpcaddr 0.0.0.0 --rpcport 8545 --rpccorsdomain "*" --bootnodes console
 
-#w3 = Web3(HTTPProvider("http://localhost:8545"))
+w3 = Web3(HTTPProvider("http://localhost:8545"))
 
 # TODO : WALLET MANAGEMENT
 
-# Created via MyEtherWallet.com or MetaMask / Ether can be mined or demanded through the Ropsten Faucet
-
-# # ROPSTEN ADDRESSES
-sender_address = Web3.toChecksumAddress('0x7fd1e740c2280c454d4d9c1585da9ccdd13cbcdc')
-sender_private_key = '45202060464c0f2f789d12da40422d878db3c5c58e69de9c4ea1b441df48d160'
-
-receiver_address = '0x216913375bA97E1E51E0018A9bbF1378350bDB63'
-
-
-# RINKEBY ADDRESSES :
-# sender_address = '0x4d3534E41539E50407795956B14154d63B0420c0'
-# sender_private_key = '230e5b00b267299dacb01379e018d80f8c1e7088e3051f0a837aa1b473e2a236'
-#
-# receiver_address = '0x3C82C1808007fF8aCb254E599752cc456cD756BA'
-
-
-print('sender address :', sender_address)
-print('receiver address', receiver_address)
-print('sender balance (in Wei):', w3.eth.getBalance(sender_address))
+> personal.newAccount("test")
+sender_address = "0xcb52676ff287679a135d1abcf2d30d453f55cee3"
 
 # Anchors a hash from queue1
 # Sends the TxID + hash (json file) in queue2 and errors are sent in errorQueue
@@ -136,3 +98,6 @@ def storeStringETH(string):
 # print(w3.eth.getBlock('latest')['number'])
 
 main(storeStringETH)
+
+
+#19fa6f349a1f3a9d1165ee0a22157f18b0f7d297 / test GETH
