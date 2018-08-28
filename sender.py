@@ -1,5 +1,5 @@
 # coding: utf-8
-import Library.ElasticMQ_Connection as EMQ
+
 import Library.serviceLibrary as service
 import time
 import hashlib
@@ -14,7 +14,7 @@ region = args.region
 aws_secret_access_key = args.accesskey
 aws_access_key_id = args.keyid
 
-queue1 = EMQ.getQueue('queue1', url, region, aws_secret_access_key, aws_access_key_id)
+queue1 = service.getQueue('queue1', url, region, aws_secret_access_key, aws_access_key_id)
 
 i = 1
 j = 1
