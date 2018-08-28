@@ -1,2 +1,4 @@
 eth.accounts
 eth.coinbase
+eth.getBalance(eth.coinbase)
+geth --identity "MyTestNetNode" --datadir /Users/victor/Documents/ubirch-ethereum-service/privatetestnet/test-net-blockchain --nodiscover --networkid 1999 --mine --minerthreads=1 --etherbase=0x19Fa6f349A1f3a9d1165EE0a22157F18B0f7d297

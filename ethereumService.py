@@ -33,8 +33,11 @@ w3 = Web3(HTTPProvider("http://localhost:8545"))
 
 # TODO : WALLET MANAGEMENT
 
-> personal.newAccount("test")
-sender_address = "0xcb52676ff287679a135d1abcf2d30d453f55cee3"
+
+#GETH ACCOUNT
+#19fa6f349a1f3a9d1165ee0a22157f18b0f7d297 / pwd : test
+
+sender_address = Web3.toChecksumAddress("19fa6f349a1f3a9d1165ee0a22157f18b0f7d297")
 
 # Anchors a hash from queue1
 # Sends the TxID + hash (json file) in queue2 and errors are sent in errorQueue
@@ -58,21 +61,21 @@ def storeStringETH(string):
         nonce = w3.eth.getTransactionCount(sender_address)
         print("Nonce = ", nonce)
         txn_dict = {                                        # Note that the address must be in checksum format ( Web3.toChecksumAddress(lower case address) to convert
-            'to': sender_address,
+            'to': w3.eth.accounts[0],
             #'from': sender_address,                         # from is an optional field
             'value': 0,
             'data': string,
             'gas': 640000,
             'gasPrice': w3.toWei('40', 'gwei'),
             'nonce': nonce,
-            'chainId': 3
+#            'chainId': 3
         }
 # '3' is the chainId of the Ropsten testnet, see https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md
 # for the list of chain ID's
 
-        signed_txn = w3.eth.account.signTransaction(txn_dict, sender_private_key)
+        #signed_txn = w3.eth.account.signTransaction(txn_dict, sender_private_key)
 
-        txn_hash = w3.eth.sendRawTransaction(signed_txn.rawTransaction)
+        txn_hash = w3.eth.sendTransaction(txn_dict)
         txn_hash_str = binascii.hexlify(txn_hash).decode('utf-8')
 
         txn_receipt = None
@@ -94,10 +97,7 @@ def storeStringETH(string):
         return False
 
 
-# print(w3.eth.gasPrice)
-# print(w3.eth.getBlock('latest')['number'])
+print(w3.eth.accounts[0]) #WORKS
+print(w3.eth.getBalance(w3.eth.coinbase)) #OK
 
-main(storeStringETH)
-
-
-#19fa6f349a1f3a9d1165ee0a22157f18b0f7d297 / test GETH
+storeStringETH("0x123456")

@@ -1,1 +1,1 @@
-geth --identity "MyTestNetNode" --datadir /Users/WWWillems/Dev/Crypto/eth-solidity-hello-world/test-net-blockchain --nodiscover --networkid 1999 --mine --minerthreads=1 --etherbase=0xb2958b1537f37f5ab92f719d9a33ab0c79f8f8db
+geth --identity "MyTestNetNode" --datadir /Users/victor/Documents/ubirch-ethereum-service/privatetestnet/test-net-blockchain --nodiscover --rpc --networkid 1999 --mine --minerthreads=1 --etherbase=0x19Fa6f349A1f3a9d1165EE0a22157F18B0f7d297
