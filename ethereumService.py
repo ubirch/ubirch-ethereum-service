@@ -103,8 +103,10 @@ def storeStringETH(string):
             'gas': 640000,
             'gasPrice': w3.toWei('40', 'gwei'),
             'nonce': nonce,
-            'chainId': 3        # 3 is the chainId of the Ropsten testnet
+            'chainId': 3
         }
+# '3' is the chainId of the Ropsten testnet, see https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md
+# for the list of chain ID's
 
         signed_txn = w3.eth.account.signTransaction(txn_dict, sender_private_key)
 
