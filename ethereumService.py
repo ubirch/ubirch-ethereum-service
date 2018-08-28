@@ -37,11 +37,21 @@ w3 = Web3(HTTPProvider("http://localhost:8545"))
 #GETH ACCOUNT
 #19fa6f349a1f3a9d1165ee0a22157f18b0f7d297 / pwd : test
 
-sender_address = Web3.toChecksumAddress("19fa6f349a1f3a9d1165ee0a22157f18b0f7d297")
+#sender_address = Web3.toChecksumAddress("19fa6f349a1f3a9d1165ee0a22157f18b0f7d297"
+sender_address = w3.eth.accounts[0]
+password = 'test'
 
 # Anchors a hash from queue1
 # Sends the TxID + hash (json file) in queue2 and errors are sent in errorQueue
 # Runs continuously (check if messages are available in queue1)
+
+
+# myAccount = w3.eth.account.create('put some extra entropy here')
+# myAddress = myAccount.address
+# myPrivateKey = myAccount.privateKey
+# print('my address is     : {}'.format(myAccount.address))
+# print('my private key is : {}'.format(myAccount.privateKey.hex()))
+
 
 
 def main(storefunction):
@@ -55,23 +65,23 @@ def storeStringETH(string):
         Returns either False if the string is non hex, either dict with the txid and the string values
         after the tx is mined (with the value 'added' for the key 'status').
         If after 300sec the tx was still not mined,
-        returns a dict specifying the string concerned and a 'timeout' value for the key 'status' """
+        returns a dict specifying the string concerned and a 'timeout' value for the key 'status'
+        '3' is the chainId of the Ropsten testnet, see https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md
+        for the list of chain ID's"""
 
     if service.is_hex(string):
         nonce = w3.eth.getTransactionCount(sender_address)
         print("Nonce = ", nonce)
         txn_dict = {                                        # Note that the address must be in checksum format ( Web3.toChecksumAddress(lower case address) to convert
-            'to': w3.eth.accounts[0],
-            #'from': sender_address,                         # from is an optional field
+            'to': sender_address,
+            'from': sender_address,                         # from is an optional field
             'value': 0,
             'data': string,
             'gas': 640000,
             'gasPrice': w3.toWei('40', 'gwei'),
             'nonce': nonce,
-#            'chainId': 3
+            'chainId': 15
         }
-# '3' is the chainId of the Ropsten testnet, see https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md
-# for the list of chain ID's
 
         #signed_txn = w3.eth.account.signTransaction(txn_dict, sender_private_key)
 
@@ -96,8 +106,7 @@ def storeStringETH(string):
     else:
         return False
 
-
-print(w3.eth.accounts[0]) #WORKS
-print(w3.eth.getBalance(w3.eth.coinbase)) #OK
-
+print(w3.personal.listAccounts)
+print(w3.eth.getBalance(sender_address))
+print(w3.eth.getBlock('latest'))#OK
 storeStringETH("0x123456")
