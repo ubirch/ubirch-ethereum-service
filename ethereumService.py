@@ -19,15 +19,12 @@ errorQueue = service.getQueue('errorQueue', url, region, aws_secret_access_key, 
 """
 
 https://medium.com/mercuryprotocol/how-to-create-your-own-private-ethereum-blockchain-dad6af82fc9f
+https://medium.com/taipei-ethereum-meetup/beginners-guide-to-ethereum-2-run-multiple-nodes-on-a-private-network-in-5-lines-c97a4d78a590
 
 """
 
 from web3 import Web3, HTTPProvider
 
-
-# GETH
-# geth --rinkeby --rpc --rpcaddr 0.0.0.0 --rpcport 8545 --rpccorsdomain "*" console
-# geth --testnet --fast --rpc --rpcaddr 0.0.0.0 --rpcport 8545 --rpccorsdomain "*" --bootnodes console
 
 w3 = Web3(HTTPProvider("http://localhost:8545"))
 
@@ -35,11 +32,9 @@ w3 = Web3(HTTPProvider("http://localhost:8545"))
 
 
 #GETH ACCOUNT
-#19fa6f349a1f3a9d1165ee0a22157f18b0f7d297 / pwd : test
 
-#sender_address = Web3.toChecksumAddress("19fa6f349a1f3a9d1165ee0a22157f18b0f7d297"
-sender_address = w3.eth.accounts[0]
-password = 'test'
+sender_address = w3.eth.coinbase
+password = '123' #for both nodes
 
 # Anchors a hash from queue1
 # Sends the TxID + hash (json file) in queue2 and errors are sent in errorQueue
@@ -59,7 +54,7 @@ def main(storefunction):
     while True:
         service.poll(queue1, errorQueue, queue2, storefunction)
 
-
+# Flag --rpcapi="db,eth,net,web3,personal,web3" needed to use the personal API"
 def storeStringETH(string):
     """ Stores a string into the Ethereum blockchain
         Returns either False if the string is non hex, either dict with the txid and the string values
@@ -83,8 +78,7 @@ def storeStringETH(string):
             'chainId': 15
         }
 
-        #signed_txn = w3.eth.account.signTransaction(txn_dict, sender_private_key)
-
+        w3.personal.unlockAccount(sender_address, password, duration=None)
         txn_hash = w3.eth.sendTransaction(txn_dict)
         txn_hash_str = binascii.hexlify(txn_hash).decode('utf-8')
 
@@ -106,7 +100,14 @@ def storeStringETH(string):
     else:
         return False
 
-print(w3.personal.listAccounts)
-print(w3.eth.getBalance(sender_address))
-print(w3.eth.getBlock('latest'))#OK
-storeStringETH("0x123456")
+
+# with open("/Users/victor/Documents/ubirch-ethereum-service/privatetestnet/test-net-blockchain/keystore/UTC--2018-08-29T09-40-43.555038738Z--c9bffb5b6325c402b058dd026e0985b338c92ac3") as keyfile:
+#     encrypted_key = keyfile.read()
+#     private_key = w3.eth.account.decrypt(encrypted_key, '123')
+#     print("private key of the sender account is : ", binascii.b2a_hex(private_key).decode('utf-8'))
+
+print("account = ", w3.eth.coinbase, "has balance :", w3.eth.getBalance(sender_address))
+#print(w3.personal.listAccounts)
+#print(w3.eth.getBlock("latest"))
+
+main(storeStringETH)
