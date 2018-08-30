@@ -184,6 +184,6 @@ Now that the nodes are connected to each other, in both terminals :
 
 And type miner.stop() to stop the mining process.
 
-5. Run the service ethereumService.py (you can run this script several times to increase the message procession speed). This script will either send errors to the errorQueue or store a Json file {status: status, hash : hash, txid : txid } in the Ethereum Blockchain and will also send this JSON to queue2.
+6. Run the service ethereumService.py (you can run this script several times to increase the message procession speed). This script will either send errors to the errorQueue or store a Json file {status: status, hash : hash, txid : txid } in the Ethereum Blockchain and will also send this JSON to queue2.
 
-6. Run the two scripts receiver.py and receiver_errors.py which will read the messages sent into the two queues.
+7. Run the two scripts receiver.py and receiver_errors.py which will read the messages sent into the two queues.
