@@ -88,12 +88,12 @@ where x.x.x is the number of the version of elasticMQ
 
 5. Before running the service, you need to be connected to the Ethereum network.
 
-  1. If you are on branch master :
+  a. If you are on branch master :
   The service is connected via web3py to its own node on the Ropsten public testnet.
 
 
 
-  2. If you are on branch privatetestnet :
+  b. If you are on branch privatetestnet :
   The service is connected via web3py a private testnet. Two nodes needs to be setup to mine the transactions.
 
   To set up the first node, please run :
