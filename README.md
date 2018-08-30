@@ -159,7 +159,10 @@ In the first terminal, (now it should be in the geth console)
 
     admin.nodeInfo.enode
 
-The output should be like the output should be like enode://b7cfadc86549c931be4e0ffca03299053b31dd40503313e05cbdc855399fca225623dd7e2e262a1f45e01137345641c4d90b88080cd678a03867f53bca890315@[::]:30302
+The output should be like : 
+
+        enode://b7cfadc86549c931be4e0ffca03299053b31dd40503313e05cbdc855399fca225623dd7e2e262a1f45e01137345641c4d90b88080cd678a03867f53bca890315@[::]:30302
+
 Where [::] is equivalent to 127.0.0.1 (localhost) and 30302 is the port your node is running on.
 
 
