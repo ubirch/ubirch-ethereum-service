@@ -42,13 +42,15 @@ that the value returned by estimateGas() method is greater than the gasLimit a V
 from web3 import Web3, HTTPProvider
 
 
-w3 = Web3(HTTPProvider("https://ropsten.infura.io/v3/966a3923b3bb4df29cb31db87901700b")) #Infura hosted node : linked to my infura account
+w3 = Web3(HTTPProvider("http://localhost:8545"))
 # w3 = Web3(HTTPProvider("https://rinkeby.infura.io/v3/966a3923b3bb4df29cb31db87901700b")) #Infura hosted node : linked to my infura account
 
 
 # GETH
-# geth --rinkeby --rpc --rpcaddr 0.0.0.0 --rpcport 8545 --rpccorsdomain "*" console
-# geth --testnet --fast --rpc --rpcaddr 0.0.0.0 --rpcport 8545 --rpccorsdomain "*" --bootnodes console
+#geth --rpc --rpcapi="db,eth,net,web3,personal,web3" --testnet --fast --bootnodes "enode://6332792c4a00e3e4ee0926ed89e0d27ef985424d97b6a45bf0f23e51f0dcb5e66b875777506458aea7af6f9e4ffb69f43f3778ee73c81ed9d34c51c4b16b0b0f@52.232.243.152:30303,enode://94c15d1b9e2fe7ce56e458b9a3b672ef11894ddedd0c6f247e0f1d3487f52b66208fb4aeb8179fce6e3a749ea93ed147c37976d67af557508d199d9594c35f09@192.81.208.223:30303"
+
+# geth --rinkeby --fast --rpc --rpcaddr 0.0.0.0 --rpcport 8545 --rpcapi="db,eth,net,web3,personal,web3" console
+# geth --testnet --fast --rpc --rpcport 8545 --rpccorsdomain "*" --bootnodes console
 
 #w3 = Web3(HTTPProvider("http://localhost:8545"))
 
@@ -97,7 +99,7 @@ def storeStringETH(string):
         print("Nonce = ", nonce)
         txn_dict = {                                        # Note that the address must be in checksum format ( Web3.toChecksumAddress(lower case address) to convert
             'to': sender_address,
-            #'from': sender_address,                         # from is an optional field
+            'from': sender_address,                         # from is an optional field
             'value': 0,
             'data': string,
             'gas': 640000,
@@ -106,9 +108,10 @@ def storeStringETH(string):
             'chainId': 3        # 3 is the chainId of the Ropsten testnet
         }
 
-        signed_txn = w3.eth.account.signTransaction(txn_dict, sender_private_key)
+        #signed_txn = w3.eth.account.signTransaction(txn_dict, sender_private_key)
 
-        txn_hash = w3.eth.sendRawTransaction(signed_txn.rawTransaction)
+        #w3.personal.unlockAccount(sender_address, '123')
+        txn_hash = w3.eth.sendTransaction(txn_dict)
         txn_hash_str = binascii.hexlify(txn_hash).decode('utf-8')
 
         txn_receipt = None
@@ -129,8 +132,9 @@ def storeStringETH(string):
     else:
         return False
 
-
+print(w3.eth.net.getId())
+print(w3.eth.getBalance(sender_address))
 # print(w3.eth.gasPrice)
 # print(w3.eth.getBlock('latest')['number'])
 
-main(storeStringETH)
+storeStringETH('123456')
