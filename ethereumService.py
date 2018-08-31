@@ -17,72 +17,53 @@ errorQueue = service.getQueue('errorQueue', url, region, aws_secret_access_key, 
 
 
 """
-Wallets:
-The testnet wallets were created using the client Metamask in the Chrome browser
 
-Node: Finally, because we’re going to be working with the Ropsten TestNet without hosting our own node, 
-we need a provider that we can connect the Blockchain through. Infura.io works well for this, so go and create a free 
-account over there. Note down your provider url for the Ropsten TestNet. 
-
-Transaction: The transaction parameter should be a dictionary with the following fields. from: bytes or text, 
-hex address or ENS name - (optional, default: web3.eth.defaultAccount) The address the transaction is send from. to: 
-bytes or text, hex address or ENS name - (optional when creating new contract) The address the transaction is 
-directed to. gasPrice: integer - (optional, default: To-Be-Determined) Integer of the gasPrice used for each paid gas 
-value: integer - (optional) Integer of the value send with this transaction data: bytes or text - The compiled code 
-of a contract OR the hash of the invoked method signature and encoded parameters. For details see Ethereum Contract 
-ABI. nonce: integer - (optional) Integer of a nonce. This allows to overwrite your own pending transactions that use 
-the same nonce. 
-
-If the transaction specifies a data value but does not specify gas then the gas value will be populated using the 
-estimateGas() function with an additional buffer of 100000 gas up to the gasLimit of the latest block. In the event 
-that the value returned by estimateGas() method is greater than the gasLimit a ValueError will be raised. 
-
+ geth --rinkeby --datadir /Users/victor/Documents/ubirch-ethereum-service/Rinkeby --syncmode "fast" --rpc --rpcapi db,eth,net,web3,personal --cache=1024  --rpcport 8545 --rpcaddr 0.0.0.0 --rpccorsdomain "*" --bootnodes=enode://a24ac7c5484ef4ed0c5eb2d36620ba4e4aa13b8c84684e1b4aab0cebea2ae45cb4d375b77eab56516d34bfbd3c1a833fc51296ff084b770b94fb9028c4d25ccf@52.169.42.101:30303
+ geth --testnet --syncmode "fast" --rpc --rpcapi db,eth,net,web3,personal --cache=1024  --rpcport 8545 --rpcaddr 0.0.0.0 --rpccorsdomain "*"
+0x5e1ad4752d5e947f078eacb94c4263293066cec0 / 123
 """
 
-from web3 import Web3, HTTPProvider
-
+from web3 import Web3, HTTPProvider, IPCProvider
+from web3.middleware import geth_poa_middleware
 
 w3 = Web3(HTTPProvider("http://localhost:8545"))
+#w3 = Web3(IPCProvider('/Users/victor/Library/Ethereum/rinkeby/geth.ipc'))
+w3.middleware_stack.inject(geth_poa_middleware, layer=0)
+print(w3.version.node)
+
 # w3 = Web3(HTTPProvider("https://rinkeby.infura.io/v3/966a3923b3bb4df29cb31db87901700b")) #Infura hosted node : linked to my infura account
 
 
-# GETH
-#geth --rpc --rpcapi="db,eth,net,web3,personal,web3" --testnet --fast --bootnodes "enode://6332792c4a00e3e4ee0926ed89e0d27ef985424d97b6a45bf0f23e51f0dcb5e66b875777506458aea7af6f9e4ffb69f43f3778ee73c81ed9d34c51c4b16b0b0f@52.232.243.152:30303,enode://94c15d1b9e2fe7ce56e458b9a3b672ef11894ddedd0c6f247e0f1d3487f52b66208fb4aeb8179fce6e3a749ea93ed147c37976d67af557508d199d9594c35f09@192.81.208.223:30303"
-
-# geth --rinkeby --fast --rpc --rpcaddr 0.0.0.0 --rpcport 8545 --rpcapi="db,eth,net,web3,personal,web3" console
-# geth --testnet --fast --rpc --rpcport 8545 --rpccorsdomain "*" --bootnodes console
-
-#w3 = Web3(HTTPProvider("http://localhost:8545"))
-
-# TODO : WALLET MANAGEMENT
-
-# Created via MyEtherWallet.com or MetaMask / Ether can be mined or demanded through the Ropsten Faucet
+#Ether can be mined or demanded through the Faucet service
 
 # # ROPSTEN ADDRESSES
-sender_address = Web3.toChecksumAddress('0x7fd1e740c2280c454d4d9c1585da9ccdd13cbcdc')
-sender_private_key = '45202060464c0f2f789d12da40422d878db3c5c58e69de9c4ea1b441df48d160'
+# sender_address = Web3.toChecksumAddress('0x7fd1e740c2280c454d4d9c1585da9ccdd13cbcdc')
+# sender_private_key = '45202060464c0f2f789d12da40422d878db3c5c58e69de9c4ea1b441df48d160'
+#
+# receiver_address = '0x216913375bA97E1E51E0018A9bbF1378350bDB63'
 
-receiver_address = '0x216913375bA97E1E51E0018A9bbF1378350bDB63'
 
-
-# RINKEBY ADDRESSES :
+#RINKEBY ADDRESSES :
 # sender_address = '0x4d3534E41539E50407795956B14154d63B0420c0'
 # sender_private_key = '230e5b00b267299dacb01379e018d80f8c1e7088e3051f0a837aa1b473e2a236'
 #
 # receiver_address = '0x3C82C1808007fF8aCb254E599752cc456cD756BA'
 
 
+sender_address = w3.eth.coinbase
+password = '123'
+
 print('sender address :', sender_address)
-print('receiver address', receiver_address)
 print('sender balance (in Wei):', w3.eth.getBalance(sender_address))
 
-# Anchors a hash from queue1
-# Sends the TxID + hash (json file) in queue2 and errors are sent in errorQueue
-# Runs continuously (check if messages are available in queue1)
+
 
 
 def main(storefunction):
-    """Continuously polls the queue for messages"""
+    """Continuously polls the queue for messages
+    Anchors a hash from queue1
+    Sends the TxID + hash (json file) in queue2 and errors are sent in errorQueue
+    Runs continuously (check if messages are available in queue1)"""
     while True:
         service.poll(queue1, errorQueue, queue2, storefunction)
 
@@ -105,12 +86,12 @@ def storeStringETH(string):
             'gas': 640000,
             'gasPrice': w3.toWei('40', 'gwei'),
             'nonce': nonce,
-            'chainId': 3        # 3 is the chainId of the Ropsten testnet
+            'chainId': 4       # 3 is the chainId of the Ropsten testnet, 4 is the one of rinkeby
         }
 
-        #signed_txn = w3.eth.account.signTransaction(txn_dict, sender_private_key)
+        #signed_txn = w3.eth.account.signTransaction(txn_dict, sender_private_key) # For remotes nodes like Infura
 
-        #w3.personal.unlockAccount(sender_address, '123')
+        w3.personal.unlockAccount(sender_address, password)
         txn_hash = w3.eth.sendTransaction(txn_dict)
         txn_hash_str = binascii.hexlify(txn_hash).decode('utf-8')
 
@@ -132,9 +113,5 @@ def storeStringETH(string):
     else:
         return False
 
-print(w3.eth.net.getId())
-print(w3.eth.getBalance(sender_address))
-# print(w3.eth.gasPrice)
-# print(w3.eth.getBlock('latest')['number'])
 
 storeStringETH('123456')
