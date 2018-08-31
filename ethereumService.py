@@ -21,6 +21,10 @@ errorQueue = service.getQueue('errorQueue', url, region, aws_secret_access_key, 
 https://medium.com/mercuryprotocol/how-to-create-your-own-private-ethereum-blockchain-dad6af82fc9f
 https://medium.com/taipei-ethereum-meetup/beginners-guide-to-ethereum-2-run-multiple-nodes-on-a-private-network-in-5-lines-c97a4d78a590
 
+eth.coinbase : 0xE3D08e1D74eB75A7128884Cf7B571eC7e000f4E6 ROPSTEN pwd 123
+eth.coinbase : 0x1cbacfe8e8c1c9c305aa241cbb5154f8abfa66f0 RINKEBY pwd 123
+
+docker run -d --name ethereum-node -v /Users/victor/Documents/ethereum:/root -p 8545:8545 -p 30303:30303 ethereum/client-go
 """
 
 from web3 import Web3, HTTPProvider
@@ -55,6 +59,7 @@ def main(storefunction):
         service.poll(queue1, errorQueue, queue2, storefunction)
 
 # Flag --rpcapi="db,eth,net,web3,personal,web3" needed to use the personal API"
+
 def storeStringETH(string):
     """ Stores a string into the Ethereum blockchain
         Returns either False if the string is non hex, either dict with the txid and the string values
