@@ -1,5 +1,5 @@
 # coding: utf-8
-import Library.ElasticMQ_Connection as EMQ
+
 import Library.serviceLibrary as service
 
 #Retrieves Json (message sent & txid) document
@@ -10,7 +10,7 @@ region = args.region
 aws_secret_access_key = args.accesskey
 aws_access_key_id = args.keyid
 
-queue2 = EMQ.getQueue('queue2', url, region, aws_secret_access_key, aws_access_key_id)
+queue2 = service.getQueue('queue2', url, region, aws_secret_access_key, aws_access_key_id)
 
 while True:
     response = queue2.receive_messages()
