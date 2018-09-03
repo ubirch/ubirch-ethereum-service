@@ -40,8 +40,7 @@ def storeStringETH(string):
         after the tx is mined (with the value 'added' for the key 'status').
         If after 300sec the tx was still not mined,
         returns a dict specifying the string concerned and a 'timeout' value for the key 'status'
-        '3' is the chainId of the Ropsten testnet, see https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md
-        for the list of chain ID's"""
+        """
 
     if service.is_hex(string):
         nonce = w3.eth.getTransactionCount(sender_address)
