@@ -4,6 +4,9 @@ import Library.serviceLibrary as service
 import time
 import binascii
 
+from web3 import Web3, HTTPProvider, IPCProvider
+from web3.middleware import geth_poa_middleware
+
 args = service.set_arguments("ethereum")
 
 url = args.url
@@ -16,38 +19,12 @@ queue2 = service.getQueue('queue2', url, region, aws_secret_access_key, aws_acce
 errorQueue = service.getQueue('errorQueue', url, region, aws_secret_access_key, aws_access_key_id)
 
 
-"""
-
- geth --rinkeby --datadir /Users/victor/Documents/ubirch-ethereum-service/Rinkeby --fast --rpc --rpcapi db,eth,net,web3,personal --cache=1024  --rpcport 8545 --rpcaddr 0.0.0.0 --rpccorsdomain "*" --bootnodes=enode://a24ac7c5484ef4ed0c5eb2d36620ba4e4aa13b8c84684e1b4aab0cebea2ae45cb4d375b77eab56516d34bfbd3c1a833fc51296ff084b770b94fb9028c4d25ccf@52.169.42.101:30303
- geth --testnet --syncmode "fast" --rpc --rpcapi db,eth,net,web3,personal --cache=1024  --rpcport 8545 --rpcaddr 0.0.0.0 --rpccorsdomain "*"
-0x5e1ad4752d5e947f078eacb94c4263293066cec0 / 123
-"""
-
-from web3 import Web3, HTTPProvider, IPCProvider
-from web3.middleware import geth_poa_middleware
-
 w3 = Web3(HTTPProvider("http://localhost:8545"))
-#w3 = Web3(IPCProvider('/Users/victor/Library/Ethereum/rinkeby/geth.ipc'))
+
 w3.middleware_stack.inject(geth_poa_middleware, layer=0)
 print(w3.version.node)
 
-# w3 = Web3(HTTPProvider("https://rinkeby.infura.io/v3/966a3923b3bb4df29cb31db87901700b")) #Infura hosted node : linked to my infura account
 
-
-#Ether can be mined or demanded through the Faucet service
-
-# # ROPSTEN ADDRESSES
-# sender_address = Web3.toChecksumAddress('0x7fd1e740c2280c454d4d9c1585da9ccdd13cbcdc')
-# sender_private_key = '45202060464c0f2f789d12da40422d878db3c5c58e69de9c4ea1b441df48d160'
-#
-# receiver_address = '0x216913375bA97E1E51E0018A9bbF1378350bDB63'
-
-
-#RINKEBY ADDRESSES :
-# sender_address = '0x4d3534E41539E50407795956B14154d63B0420c0'
-# sender_private_key = '230e5b00b267299dacb01379e018d80f8c1e7088e3051f0a837aa1b473e2a236'
-#
-# receiver_address = '0x3C82C1808007fF8aCb254E599752cc456cD756BA'
 
 
 sender_address = w3.eth.coinbase
@@ -55,8 +32,6 @@ password = '123'
 
 print('sender address :', sender_address)
 print('sender balance (in Wei):', w3.eth.getBalance(sender_address))
-
-
 
 
 def main(storefunction):
@@ -89,8 +64,6 @@ def storeStringETH(string):
             'chainId': 4       # 3 is the chainId of the Ropsten testnet, 4 is the one of rinkeby
         }
 
-        #signed_txn = w3.eth.account.signTransaction(txn_dict, sender_private_key) # For remotes nodes like Infura
-
         w3.personal.unlockAccount(sender_address, password)
         txn_hash = w3.eth.sendTransaction(txn_dict)
         txn_hash_str = binascii.hexlify(txn_hash).decode('utf-8')
@@ -114,6 +87,4 @@ def storeStringETH(string):
         return False
 
 
-storeStringETH('123456') #For testing
-
-# main(storeStringETH)
+main(storeStringETH)
