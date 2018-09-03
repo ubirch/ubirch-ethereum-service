@@ -1,7 +1,7 @@
 # ubirch-ethereum-service
 
-This ubirch service continously polls a queue and anchors its messages on the Ethereum blockchain.
-Errors such as timeouts and non hex messages are sent into an errorQueue while the successful anchoring of an hexadecimal message results in the sending of a JSON file : {'status': 'added', 'txid': txid, 'message': message}.
+This ubirch service continously polls a queue (Queue1) and anchors its messages on the Ethereum blockchain.
+Errors such as timeouts and non hex messages are sent into an errorQueue while the successful anchoring of an hexadecimal message results in the sending of a JSON file : {'status': 'added', 'txid': txid, 'message': message} in another queue (Queue2).
 
 # Documentation and requirements
 This projects uses python 3.7 and the libraries needed are the following :
