@@ -58,7 +58,7 @@ def storeStringETH(string):
         }
 
         w3.personal.unlockAccount(sender_address, password, duration=None)
-        txn_hash = w3.eth.sendTransaction(txn_dict)
+        txn_hash = w3.eth.sendTransaction(txn_dict) # Returns bytes
         txn_hash_str = binascii.hexlify(txn_hash).decode('utf-8')
 
         txn_receipt = None
