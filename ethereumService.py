@@ -3,6 +3,8 @@
 import Library.serviceLibrary as service
 import time
 import binascii
+from web3 import Web3, HTTPProvider
+
 
 args = service.set_arguments("ethereum")
 
@@ -15,50 +17,22 @@ queue1 = service.getQueue('queue1', url, region, aws_secret_access_key, aws_acce
 queue2 = service.getQueue('queue2', url, region, aws_secret_access_key, aws_access_key_id)
 errorQueue = service.getQueue('errorQueue', url, region, aws_secret_access_key, aws_access_key_id)
 
-
-"""
-
-https://medium.com/mercuryprotocol/how-to-create-your-own-private-ethereum-blockchain-dad6af82fc9f
-https://medium.com/taipei-ethereum-meetup/beginners-guide-to-ethereum-2-run-multiple-nodes-on-a-private-network-in-5-lines-c97a4d78a590
-
-eth.coinbase : 0xE3D08e1D74eB75A7128884Cf7B571eC7e000f4E6 ROPSTEN pwd 123
-eth.coinbase : 0x1cbacfe8e8c1c9c305aa241cbb5154f8abfa66f0 RINKEBY pwd 123
-
-docker run -d --name ethereum-node -v /Users/victor/Documents/ethereum:/root -p 8545:8545 -p 30303:30303 ethereum/client-go
-"""
-
-from web3 import Web3, HTTPProvider
-
-
 w3 = Web3(HTTPProvider("http://localhost:8545"))
 
-# TODO : WALLET MANAGEMENT
-
-
-#GETH ACCOUNT
-
+#Geth accounts
 sender_address = w3.eth.coinbase
-password = '123' #for both nodes
-
-# Anchors a hash from queue1
-# Sends the TxID + hash (json file) in queue2 and errors are sent in errorQueue
-# Runs continuously (check if messages are available in queue1)
-
-
-# myAccount = w3.eth.account.create('put some extra entropy here')
-# myAddress = myAccount.address
-# myPrivateKey = myAccount.privateKey
-# print('my address is     : {}'.format(myAccount.address))
-# print('my private key is : {}'.format(myAccount.privateKey.hex()))
-
+password = '123' # For both accounts in my case.
 
 
 def main(storefunction):
-    """Continuously polls the queue for messages"""
+    """
+    Continuously polls the queue for messages
+    Anchors a hash from queue1
+    Sends the TxID + hash (json file) in queue2 and errors are sent in errorQueue
+    Runs continuously (check if messages are available in queue1) """
     while True:
         service.poll(queue1, errorQueue, queue2, storefunction)
 
-# Flag --rpcapi="db,eth,net,web3,personal,web3" needed to use the personal API"
 
 def storeStringETH(string):
     """ Stores a string into the Ethereum blockchain
@@ -106,13 +80,7 @@ def storeStringETH(string):
         return False
 
 
-# with open("/Users/victor/Documents/ubirch-ethereum-service/privatetestnet/test-net-blockchain/keystore/UTC--2018-08-29T09-40-43.555038738Z--c9bffb5b6325c402b058dd026e0985b338c92ac3") as keyfile:
-#     encrypted_key = keyfile.read()
-#     private_key = w3.eth.account.decrypt(encrypted_key, '123')
-#     print("private key of the sender account is : ", binascii.b2a_hex(private_key).decode('utf-8'))
-
 print("account = ", w3.eth.coinbase, "has balance :", w3.eth.getBalance(sender_address))
-#print(w3.personal.listAccounts)
-#print(w3.eth.getBlock("latest"))
+
 
 main(storeStringETH)

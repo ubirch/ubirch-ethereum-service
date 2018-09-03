@@ -1,12 +1,12 @@
 # ubirch-ethereum-service
-ubirch Ethereum based anchoring service. The ethereum library requires Python >= 3.5.
+ubirch Ethereum based anchoring service. <br> The ethereum library requires Python >= 3.5.
 
 An Ethereum based anchoring service. Master sends the messages one by one while fix_storing sends them in a bundle.
 After a few tests I remarked that sending them one by one seems more time efficient.
 
 ## Documentation and requirements
 This projects uses python 3.7 and the libraries needed are the following :
-web3py, json, sys, random, boto3 and argparse. Working with a venv is recommended.
+web3py, json, sys, random, boto3 and argparse. <br>
 Moreover, Elasticmq and Geth need to be properly installed.
 
 -Elasticmq documentation : https://github.com/adamw/elasticmq
@@ -88,12 +88,13 @@ where x.x.x is the number of the version of elasticMQ
 
 5. Before running the service, you need to be connected to the Ethereum network.
 
-  a. If you are on branch master :
-  The service is connected via web3py to its own node on the Ropsten public testnet.
+  a. <b> If you are on branch master : </b> <br>
+  The service is connected via web3py to its own node on the Rinkeby public testnet, which is PoA (Proof of Authority) based.
+  Please visit 
+  
 
 
-
-  b. If you are on branch privatetestnet :
+  b. <b> If you are on branch privatetestnet : </b> <br> 
   The service is connected via web3py a private testnet. Two nodes needs to be setup to mine the transactions.
 
   To set up the first node, please run :
@@ -121,7 +122,11 @@ Then run:
 
     geth --identity "MyTestNetNode" --datadir YOUR_DATADIR --nodiscover --rpc --networkid 1999 --rpcapi="db,eth,net,web3,personal,web3" console
 
-and type personal.newAccount() in the console. This will give you an ETH address and ask you for a passphrase which you must not forget.
+and type in the console : 
+
+        personal.newAccount()
+        
+This will give you an ETH address and ask you for a passphrase which you must not forget as it gives you access to your private key, and thus, to your money. <br>
 
 Finally run:
 
@@ -148,12 +153,14 @@ with genesis.json looking like this:
         "Address1 just created": { "balance" : "0x1337000000000000000000"},
       }
     }
+<b> Now initialize a second node </b> by changing only these two flags : <b> --identity "MyTestNetNode2" </b> and <b> --datadir YOUR_DATADIR2 </b>, but you have keep the same genesis file. <br>
+Once the second node is initialized, connect to it : <b> add the flags --rpcport 8546 --port 30304 </b> and create an account by typing on the geth console :
 
-Now initialize a second node by changing only these two flags : --identity "MyTestNetNode2" and --datadir YOUR_DATADIR2, but keep the same genesis file (important).
-Once the second node is initialized, connect to it (add the flags --rpcport 8546 --port 30304) and create an account by typing personal.newAccount() on the geth console. This address will serve of base address for the mining process.
-
+        personal.newAccount()
+ 
+This address will serve of base address for the mining process. <br>
 Now, your two nodes should be running on the same network. Next, find the enode url of one of your nodes.
-Enode url is like a unique id for nodes to communicate with each other
+Enode url is like a unique id for nodes to communicate with each other.
 
 In the first terminal, (now it should be in the geth console)
 
@@ -182,8 +189,11 @@ Now that the nodes are connected to each other, in both terminals :
 
     miner.start() //output true
 
-And type miner.stop() to stop the mining process.
+And, to stop the mining process :
 
-6. Run the service ethereumService.py (you can run this script several times to increase the message procession speed). This script will either send errors to the errorQueue or store a Json file {status: status, hash : hash, txid : txid } in the Ethereum Blockchain and will also send this JSON to queue2.
+        miner.stop()
+
+6. Run the service ethereumService.py (you can run this script several times to increase the message procession speed). <br> 
+This script will either send errors to the errorQueue or store a Json file {status: status, hash : hash, txid : txid } in the Ethereum Blockchain and will also send this JSON to queue2.
 
 7. Run the two scripts receiver.py and receiver_errors.py which will read the messages sent into the two queues.
