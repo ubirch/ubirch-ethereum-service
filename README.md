@@ -1,10 +1,9 @@
 # ubirch-ethereum-service
-ubirch Ethereum based anchoring service. <br> The ethereum library requires Python >= 3.5.
 
-An Ethereum based anchoring service. Master sends the messages one by one while fix_storing sends them in a bundle.
-After a few tests I remarked that sending them one by one seems more time efficient.
+This ubirch service continously polls a queue and anchors its messages on the Ethereum blockchain.
+Errors such as timeouts and non hex messages are sent into an errorQueue while 
 
-## Documentation and requirements
+# Documentation and requirements
 This projects uses python 3.7 and the libraries needed are the following :
 web3py, json, sys, random, boto3 and argparse. <br>
 Moreover, Elasticmq and Geth need to be properly installed.
@@ -15,9 +14,9 @@ Moreover, Elasticmq and Geth need to be properly installed.
 
 -Web3py, a python library for interacting with Ethereum. Its API is derived from the Web3.js Javascript API : https://web3py.readthedocs.io/en/stable/
     
-## How to use this service :
+# How to use this service :
 
-1. Install Geth (see : https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum)
+1. Install Geth, see : https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum
 
 2. Download ElasticMQ and create a custom.conf file so it looks like this :
 
@@ -119,9 +118,8 @@ To create a new account :
     > eth.getBalance(eth.coinbase)
     0
 
-To request ETH : https://faucet.rinkeby.io/
-
-  
+To request ETH : https://faucet.rinkeby.io/ <br>
+Once the node is up and running and you have an address with Rinkeby ETH on it, you can start the service.
 
 
 <b>  b.  If you are on branch privatetestnet : </b> <br> 
