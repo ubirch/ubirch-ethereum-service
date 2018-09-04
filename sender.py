@@ -4,9 +4,7 @@ import Library.serviceLibrary as service
 import time
 import hashlib
 
-# Sends messages (HASH (hex) into queue1
-# Dev purposes
-
+# Sends messages into queue1
 
 args = service.set_arguments("ethereum")
 url = args.url
