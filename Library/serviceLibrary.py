@@ -45,8 +45,10 @@ def set_arguments(servicetype):
     parser.add_argument('-ki', '--keyid', help="AWS access key id, input 'x' for local connection (default)",
                         metavar="KEYID", type=str, default="x")
 
-    parser.add_argument('-pwd', '--pwd', help="password used to decrypt the Keystore File",
+    parser.add_argument('-p', '--pwd', help="password used to decrypt the Keystore File",
                         metavar="PWD", type=str)
+    parser.add_argument('-kf', '--keyfile', help='location of your keyfile', metavar='PATH TO KEYFILE', type=str)
+
     return parser.parse_args()
 
 
