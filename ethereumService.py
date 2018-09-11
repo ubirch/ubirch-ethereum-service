@@ -27,8 +27,8 @@ print(w3.version.node)
 
 
 
-sender_address = w3.eth.coinbase
-password = '123'
+sender_address = w3.eth.coinbase # 0x52d06bf3cccb8140101698fd9f91a53b664849fc for the strato hosted node
+password = 'Ubirch' # This is just to unlock a Rinkeby wallet (0 value ETH !)
 
 print('sender address :', sender_address)
 print('sender balance (in Wei):', w3.eth.getBalance(sender_address))
@@ -85,6 +85,5 @@ def storeStringETH(string):
 
     else:
         return False
-
 
 main(storeStringETH)
