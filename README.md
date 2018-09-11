@@ -92,9 +92,10 @@ where x.x.x is the number of the version of elasticMQ.
 
 The service is connected via web3py to its own node on the Rinkeby public testnet, which is PoA (Proof of Authority) based.
 
-UPDATE : Ubirch has now its own Rinkeby testnet node running on the strato server. If you wish to use this node, before running the service please run :
+UPDATE : Ubirch has now its own Rinkeby testnet node running its strato server. If you wish to use this node, before running the service please use the following ssh tunnel :
         
-        ssh -L 8545:localhost:8545 user@hostname
+        8545:localhost:8545
+        
 
 <b> If you want to set up your own node : </b> <br>
 Please visit : https://www.rinkeby.io/#geth and download rinkeby.json <br>
@@ -126,8 +127,7 @@ To create a new account :
     0
 
 To request ETH : https://faucet.rinkeby.io/ <br>
-Once the node is up and running and you have an address with Rinkeby ETH on it, you can start the service.
-
+Once the node is up and running and you have access ( = keyfile on your machine and known password) to an address with Rinkeby ETH on it, you can start the service.
 
 <b>  b.  If you are on branch privatetestnet : </b> <br> 
 
@@ -232,5 +232,7 @@ And, to stop the mining process :
 
 6. Run the service ethereumService.py (you can run this script several times to increase the message procession speed). <br> 
 This script will either send errors to the errorQueue or store a Json file {status: status, hash : hash, txid : txid } in the Ethereum Blockchain and will also send this JSON to queue2.
+
+        python ethereumService.py --keyfile=PATHTOKEYFILE --pwd=PASSWORD
 
 7. Run the two scripts receiver.py and receiver_errors.py which will read the messages sent into the two queues.
