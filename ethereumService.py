@@ -4,7 +4,7 @@ import Library.serviceLibrary as service
 import time
 import binascii
 
-from web3 import Web3, HTTPProvider, IPCProvider
+from web3 import Web3, HTTPProvider
 from web3.middleware import geth_poa_middleware
 
 w3 = Web3(HTTPProvider("http://localhost:8545"))
@@ -59,18 +59,18 @@ def storeStringETH(string):
         print("Nonce = ", nonce)
         txn_dict = {                                        # Note that the address must be in checksum format ( Web3.toChecksumAddress(lower case address) to convert
             'to': sender_address,
-            'from': sender_address,                         # from is an optional field
+            'from': sender_address,                         # From is an optional field
             'value': 0,
             'data': string,
             'gas': 640000,
             'gasPrice': w3.toWei('40', 'gwei'),
             'nonce': nonce,
-            'chainId': 4       # 3 is the chainId of the Ropsten testnet, 4 is the one of rinkeby
+            'chainId': 4       # 3 is the chainId of the Ropsten testnet, 4 is the one of Rinkeby
         }
 
-        signedTx = w3.eth.account.signTransaction(txn_dict, private_key)
+        signed_tx = w3.eth.account.signTransaction(txn_dict, private_key)
 
-        txn_hash = w3.eth.sendRawTransaction(signedTx.rawTransaction)
+        txn_hash = w3.eth.sendRawTransaction(signed_tx.rawTransaction)
         txn_hash_str = binascii.hexlify(txn_hash).decode('utf-8')
 
         txn_receipt = None
