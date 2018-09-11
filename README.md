@@ -91,7 +91,14 @@ where x.x.x is the number of the version of elasticMQ.
 <b>  a. If you are on branch master : </b> <br>
 
 The service is connected via web3py to its own node on the Rinkeby public testnet, which is PoA (Proof of Authority) based.
-Please visit : https://www.rinkeby.io/#geth and download rinkeby.json
+
+UPDATE : Ubirch has now its own Rinkeby testnet node running on the strato server. If you wish to use this node, before running the service please run :
+        
+        ssh -L 8545:localhost:8545 user@hostname
+
+<b> If you want to set up your own node : </b> <br>
+Please visit : https://www.rinkeby.io/#geth and download rinkeby.json <br>
+
 
 To initialize, execute:
 
