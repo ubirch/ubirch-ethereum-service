@@ -233,6 +233,12 @@ And, to stop the mining process :
 6. Run the service ethereumService.py (you can run this script several times to increase the message procession speed). <br> 
 This script will either send errors to the errorQueue or store a Json file {status: status, hash : hash, txid : txid } in the Ethereum Blockchain and will also send this JSON to queue2.
 
-        python ethereumService.py --keyfile=PATHTOKEYFILE --pwd=PASSWORD
+
+    python ethereumService.py --keyfile=PATHTOKEYFILE --pwd=PASSWORD
+    
+
+If you some additional documentation, please run :
+
+    python ethereumService.py -h
 
 7. Run the two scripts receiver.py and receiver_errors.py which will read the messages sent into the two queues.
