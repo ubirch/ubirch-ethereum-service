@@ -46,7 +46,7 @@ def set_arguments(servicetype):
                         metavar="KEYID", type=str, default="x")
 
     parser.add_argument('-p', '--pwd', help="password used to decrypt the Keystore File",
-                        metavar="PWD", type=str)
+                        metavar="PASSWORD", type=str)
     parser.add_argument('-kf', '--keyfile', help='location of your keyfile', metavar='PATH TO KEYFILE', type=str)
 
     return parser.parse_args()
