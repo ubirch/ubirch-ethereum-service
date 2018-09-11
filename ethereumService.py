@@ -9,10 +9,12 @@ from web3.middleware import geth_poa_middleware
 
 args = service.set_arguments("ethereum")
 
+
 url = args.url
 region = args.region
 aws_secret_access_key = args.accesskey
 aws_access_key_id = args.keyid
+password = args.pwd
 
 queue1 = service.getQueue('queue1', url, region, aws_secret_access_key, aws_access_key_id)
 queue2 = service.getQueue('queue2', url, region, aws_secret_access_key, aws_access_key_id)
@@ -22,12 +24,12 @@ errorQueue = service.getQueue('errorQueue', url, region, aws_secret_access_key, 
 w3 = Web3(HTTPProvider("http://localhost:8545"))
 
 w3.middleware_stack.inject(geth_poa_middleware, layer=0)
-print(w3.version.node)
+print(w3.version.n
 
 
 
 
-sender_address = w3.eth.coinbase
+sender_address = "0x305152Bd0631070256e25F33A20fcBd6B1c665cd"
 
 print('sender address :', sender_address)
 print('sender balance (in Wei):', w3.eth.getBalance(sender_address))
