@@ -91,7 +91,15 @@ where x.x.x is the number of the version of elasticMQ.
 <b>  a. If you are on branch master : </b> <br>
 
 The service is connected via web3py to its own node on the Rinkeby public testnet, which is PoA (Proof of Authority) based.
-Please visit : https://www.rinkeby.io/#geth and download rinkeby.json
+
+UPDATE : Ubirch has now its own Rinkeby testnet node running its strato server. If you wish to use this node, before running the service please use the following ssh tunnel :
+        
+        8545:localhost:8545
+        
+
+<b> If you want to set up your own node : </b> <br>
+Please visit : https://www.rinkeby.io/#geth and download rinkeby.json <br>
+
 
 To initialize, execute:
 
@@ -99,9 +107,9 @@ To initialize, execute:
 
 Then, execute:
 
-    geth --rinkeby --syncmode=fast --datadir YOUR_DATA_DIR --rpc --rpcapi db,eth,net,web3,personal --cache=1024  --rpcport 8545 --rpcaddr 0.0.0.0 --rpccorsdomain "*" --bootnodes=enode://a24ac7c5484ef4ed0c5eb2d36620ba4e4aa13b8c84684e1b4aab0cebea2ae45cb4d375b77eab56516d34bfbd3c1a833fc51296ff084b770b94fb9028c4d25ccf@52.169.42.101:30303
+    geth --rinkeby --datadir YOUR_DATA_DIR --fast --rpc --rpcapi db,eth,net,web3,personal --cache=1024  --rpcport 8545 --rpcaddr 0.0.0.0 --rpccorsdomain "*" --bootnodes=enode://a24ac7c5484ef4ed0c5eb2d36620ba4e4aa13b8c84684e1b4aab0cebea2ae45cb4d375b77eab56516d34bfbd3c1a833fc51296ff084b770b94fb9028c4d25ccf@52.169.42.101:30303
 
-To use the geth console, open another terminal and execute :
+To check the syncing, open another terminal and execute :
 
     geth --datadir YOUR_DATA_DIR attach
 
@@ -119,8 +127,7 @@ To create a new account :
     0
 
 To request ETH : https://faucet.rinkeby.io/ <br>
-Once the node is up and running and you have an address with Rinkeby ETH on it, you can start the service.
-
+Once the node is up and running and you have access ( = keyfile on your machine and known password) to an address with Rinkeby ETH on it, you can start the service.
 
 <b>  b.  If you are on branch privatetestnet : </b> <br> 
 
@@ -225,5 +232,13 @@ And, to stop the mining process :
 
 6. Run the service ethereumService.py (you can run this script several times to increase the message procession speed). <br> 
 This script will either send errors to the errorQueue or store a Json file {status: status, hash : hash, txid : txid } in the Ethereum Blockchain and will also send this JSON to queue2.
+
+
+    python ethereumService.py --keyfile=PATHTOKEYFILE --pwd=PASSWORD
+    
+
+If you some additional documentation, please run :
+
+    python ethereumService.py -h
 
 7. Run the two scripts receiver.py and receiver_errors.py which will read the messages sent into the two queues.
