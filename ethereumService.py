@@ -27,7 +27,7 @@ print(w3.version.node)
 
 
 
-sender_address = w3.eth.coinbase # 0x52d06bf3cccb8140101698fd9f91a53b664849fc for the strato hosted node
+sender_address = w3.eth.coinbase
 password = 'Ubirch' # This is just to unlock a Rinkeby wallet (0 value ETH !)
 
 print('sender address :', sender_address)
