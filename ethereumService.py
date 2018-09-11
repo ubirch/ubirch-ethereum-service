@@ -28,7 +28,6 @@ print(w3.version.node)
 
 
 sender_address = w3.eth.coinbase
-password = 'Ubirch' # This is just to unlock a Rinkeby wallet (0 value ETH !)
 
 print('sender address :', sender_address)
 print('sender balance (in Wei):', w3.eth.getBalance(sender_address))
