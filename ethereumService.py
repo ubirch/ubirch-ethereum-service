@@ -4,35 +4,39 @@ import Library.serviceLibrary as service
 import time
 import binascii
 
-from web3 import Web3, HTTPProvider, IPCProvider
+from web3 import Web3, HTTPProvider
 from web3.middleware import geth_poa_middleware
+
+w3 = Web3(HTTPProvider("http://localhost:8545"))
+w3.middleware_stack.inject(geth_poa_middleware, layer=0) # Because we are on a Proof of Authority based ETH testnet
+print(w3.version.node)
 
 args = service.set_arguments("ethereum")
 
+#To access the SQS Queue
 url = args.url
 region = args.region
 aws_secret_access_key = args.accesskey
 aws_access_key_id = args.keyid
+
 
 queue1 = service.getQueue('queue1', url, region, aws_secret_access_key, aws_access_key_id)
 queue2 = service.getQueue('queue2', url, region, aws_secret_access_key, aws_access_key_id)
 errorQueue = service.getQueue('errorQueue', url, region, aws_secret_access_key, aws_access_key_id)
 
 
-w3 = Web3(HTTPProvider("http://localhost:8545"))
-
-w3.middleware_stack.inject(geth_poa_middleware, layer=0)
-print(w3.version.node)
-
+#To unlock your wallet
+password = args.pwd
+keyfile = args.keyfile
 
 
-
-sender_address = w3.eth.coinbase
-password = '123'
-
+sender_address = "0x305152Bd0631070256e25F33A20fcBd6B1c665cd"
 print('sender address :', sender_address)
 print('sender balance (in Wei):', w3.eth.getBalance(sender_address))
 
+with open(keyfile) as kf:
+    encrypted_key = kf.read()
+    private_key = w3.eth.account.decrypt(encrypted_key, password)
 
 def main(storefunction):
     """Continuously polls the queue for messages
@@ -55,17 +59,18 @@ def storeStringETH(string):
         print("Nonce = ", nonce)
         txn_dict = {                                        # Note that the address must be in checksum format ( Web3.toChecksumAddress(lower case address) to convert
             'to': sender_address,
-            'from': sender_address,                         # from is an optional field
+            'from': sender_address,                         # From is an optional field
             'value': 0,
             'data': string,
             'gas': 640000,
             'gasPrice': w3.toWei('40', 'gwei'),
             'nonce': nonce,
-            'chainId': 4       # 3 is the chainId of the Ropsten testnet, 4 is the one of rinkeby
+            'chainId': 4       # 3 is the chainId of the Ropsten testnet, 4 is the one of Rinkeby
         }
 
-        w3.personal.unlockAccount(sender_address, password)
-        txn_hash = w3.eth.sendTransaction(txn_dict)
+        signed_tx = w3.eth.account.signTransaction(txn_dict, private_key)
+
+        txn_hash = w3.eth.sendRawTransaction(signed_tx.rawTransaction)
         txn_hash_str = binascii.hexlify(txn_hash).decode('utf-8')
 
         txn_receipt = None
