@@ -4,7 +4,7 @@ This ubirch service continously polls a queue (Queue1) and anchors its messages 
 Errors such as timeouts and non hex messages are sent into an errorQueue while the successful anchoring of an hexadecimal message results in the sending of a JSON file : {'status': 'added', 'txid': txid, 'message': message} in another queue (Queue2).
 
 # Configuration
-This projects uses python 3.7. <br>.
+This projects uses python 3.7. <br>
 Please run in your virtual environment:
 
         pip install -r requirements.txt
