@@ -3,20 +3,19 @@
 This ubirch service continously polls a queue (Queue1) and anchors its messages on the Ethereum blockchain.
 Errors such as timeouts and non hex messages are sent into an errorQueue while the successful anchoring of an hexadecimal message results in the sending of a JSON file : {'status': 'added', 'txid': txid, 'message': message} in another queue (Queue2).
 
-# Documentation and requirements
-This projects uses python 3.7 and the libraries needed are the following :
-web3py, json, sys, random, boto3 and argparse. <br>
-Moreover, Elasticmq and Geth need to be properly installed.
+# Configuration
+This projects uses python 3.7. <br>.
+Please run in your virtual environment:
 
--Elasticmq documentation : https://github.com/adamw/elasticmq
+        pip install -r requirements.txt
+       
+Moreover, [Elasticmq](https://github.com/adamw/elasticmq) and [Geth](https://github.com/ethereum/go-ethereum) need to be properly installed.
+This projects mainly uses [Web3py](https://web3py.readthedocs.io/en/stable/), a python library for interacting with Ethereum. Its API is derived from the Web3.js Javascript API.
 
--Geth, the go implementation of the Ethereum protocol : https://github.com/ethereum/go-ethereum
-
--Web3py, a python library for interacting with Ethereum. Its API is derived from the Web3.js Javascript API : https://web3py.readthedocs.io/en/stable/
     
 # How to use this service :
 
-1. Install Geth, see : https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum
+1. [Install Geth](https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum)
 
 2. Download ElasticMQ and create a custom.conf file so it looks like this :
 
