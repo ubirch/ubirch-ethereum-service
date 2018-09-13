@@ -1,17 +1,18 @@
 # coding: utf-8
 
-import Library.serviceLibrary as service
 import time
 import binascii
 
 from web3 import Web3, HTTPProvider
 from web3.middleware import geth_poa_middleware
 
+from ubirch.anchoring import *
+
 w3 = Web3(HTTPProvider("http://localhost:8545"))
 w3.middleware_stack.inject(geth_poa_middleware, layer=0) # Because we are on a Proof of Authority based ETH testnet
 print(w3.version.node)
 
-args = service.set_arguments("ethereum")
+args = set_arguments("ethereum")
 
 #To access the SQS Queue
 url = args.url
@@ -20,9 +21,9 @@ aws_secret_access_key = args.accesskey
 aws_access_key_id = args.keyid
 
 
-queue1 = service.getQueue('queue1', url, region, aws_secret_access_key, aws_access_key_id)
-queue2 = service.getQueue('queue2', url, region, aws_secret_access_key, aws_access_key_id)
-errorQueue = service.getQueue('errorQueue', url, region, aws_secret_access_key, aws_access_key_id)
+queue1 = getQueue('queue1', url, region, aws_secret_access_key, aws_access_key_id)
+queue2 = getQueue('queue2', url, region, aws_secret_access_key, aws_access_key_id)
+errorQueue = getQueue('errorQueue', url, region, aws_secret_access_key, aws_access_key_id)
 
 
 #To unlock your wallet
@@ -44,7 +45,7 @@ def main(storefunction):
     Sends the TxID + hash (json file) in queue2 and errors are sent in errorQueue
     Runs continuously (check if messages are available in queue1)"""
     while True:
-        service.poll(queue1, errorQueue, queue2, storefunction)
+        poll(queue1, errorQueue, queue2, storefunction)
 
 
 def storeStringETH(string):
@@ -54,7 +55,7 @@ def storeStringETH(string):
         If after 300sec the tx was still not mined,
         returns a dict specifying the string concerned and a 'timeout' value for the key 'status' """
 
-    if service.is_hex(string):
+    if is_hex(string):
         nonce = w3.eth.getTransactionCount(sender_address)
         print("Nonce = ", nonce)
         txn_dict = {                                        # Note that the address must be in checksum format ( Web3.toChecksumAddress(lower case address) to convert
