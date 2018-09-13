@@ -30,7 +30,7 @@ password = args.pwd
 keyfile = args.keyfile
 
 
-sender_address = "0x305152Bd0631070256e25F33A20fcBd6B1c665cd"
+sender_address = "0x305152Bd0631070256e25F33A20fcBd6B1c665cd" # Must be generated and funded beforehand
 print('sender address :', sender_address)
 print('sender balance (in Wei):', w3.eth.getBalance(sender_address))
 
