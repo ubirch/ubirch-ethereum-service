@@ -1,11 +1,23 @@
 # coding: utf-8
 
+# Copyright (c) 2018 ubirch GmbH.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import time
 import binascii
-
 from web3 import Web3, HTTPProvider
 from web3.middleware import geth_poa_middleware
-
 from ubirch.anchoring import *
 
 w3 = Web3(HTTPProvider("http://localhost:8545"))
@@ -14,7 +26,7 @@ print(w3.version.node)
 
 args = set_arguments("ethereum")
 
-#To access the SQS Queue
+# To access the SQS Queue
 url = args.url
 region = args.region
 aws_secret_access_key = args.accesskey
@@ -26,7 +38,7 @@ queue2 = getQueue('queue2', url, region, aws_secret_access_key, aws_access_key_i
 errorQueue = getQueue('errorQueue', url, region, aws_secret_access_key, aws_access_key_id)
 
 
-#To unlock your wallet
+# To unlock your wallet
 password = args.pwd
 keyfile = args.keyfile
 
