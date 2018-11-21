@@ -1,19 +1,15 @@
 # ubirch-ethereum-service
-
-This ubirch service continously polls a queue (Queue1) and anchors its messages on the Ethereum blockchain.
-Errors such as timeouts and non hex messages are sent into an errorQueue while the successful anchoring of an hexadecimal message results in the sending of a JSON file : {'status': 'added', 'txid': txid, 'message': message} in another queue (Queue2).
+An Ethereum based anchoring service.
+This service uses Apache Kafka for messaging.
 
 # Configuration
-This projects uses python 3.7. <br>
-Please run in your virtual environment:
+This projects uses Python 3. <br>
+Please, run in your virtual environment:
 
-        pip install -r requirements.txt
-       
-Moreover, [Elasticmq](https://github.com/adamw/elasticmq) and [Geth](https://github.com/ethereum/go-ethereum) need to be properly installed.
-This projects mainly uses [Web3py](https://web3py.readthedocs.io/en/stable/), a python library for interacting with Ethereum. Its API is derived from the Web3.js Javascript API.
+        pip3 install -r requirements.txt
 
-    
-# How to use this service :
+1. Set up the [Kafka]((https://kafka.apache.org/)) server. Useful bash scripts are in bin/ ( ./start-zookeeper.sh, ./start-kafka.sh and./create-all-topics.sh).<br> Three topics should be created : queue1, queue2 and errorQueue. <br>
+
 
 1. [Install Geth](https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum)
 
