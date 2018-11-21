@@ -16,7 +16,7 @@
 
 import time
 import hashlib
-from ubirch.anchoring import *
+from ubirch.anchoring_SQS import *
 
 
 args = set_arguments("ethereum")

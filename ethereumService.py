@@ -18,7 +18,7 @@ import time
 import binascii
 from web3 import Web3, HTTPProvider
 from web3.middleware import geth_poa_middleware
-from ubirch.anchoring import *
+from ubirch.anchoring_SQS import *
 
 w3 = Web3(HTTPProvider("http://localhost:8545"))
 w3.middleware_stack.inject(geth_poa_middleware, layer=0) # Because we are on a Proof of Authority based ETH testnet
