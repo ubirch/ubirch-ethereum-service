@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ubirch.anchoring import *
+from ubirch.anchoring_SQS import *
 
 
 args = set_arguments("ethereum")
