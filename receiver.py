@@ -1,5 +1,7 @@
 # coding: utf-8
-
+#
+# @author Victor Patrin
+#
 # Copyright (c) 2018 ubirch GmbH.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,22 +16,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ubirch.anchoring_SQS import *
 
+from libtest import *
+from kafka import *
 
 args = set_arguments("ethereum")
-url = args.url
-region = args.region
-aws_secret_access_key = args.accesskey
-aws_access_key_id = args.keyid
+port = args.port
 
-queue2 = getQueue('queue2', url, region, aws_secret_access_key, aws_access_key_id)
-
-while True:
-    response = queue2.receive_messages()
-    for r in response:
-        print(r.body)
-        r.delete()
+queue2 = KafkaConsumer('queue2', bootstrap_servers=port, value_deserializer=lambda m: json.loads(m.decode('ascii')))
 
 
-
+for msg in queue2:
+    print(json.dumps(msg.value))
