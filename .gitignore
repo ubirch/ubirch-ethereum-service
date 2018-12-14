@@ -1,6 +1,11 @@
 *.DS_Store
 *.idea
 
+# Kafka logs
+
+kafka_2.11-2.0.0/logs
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
