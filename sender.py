@@ -20,7 +20,7 @@
 import time
 import hashlib
 
-from libtest import *
+from ubirch.anchoring_kafka import *
 from kafka import *
 
 
