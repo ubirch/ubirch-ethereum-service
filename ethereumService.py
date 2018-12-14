@@ -19,7 +19,7 @@ import binascii
 from web3 import Web3, HTTPProvider
 from web3.middleware import geth_poa_middleware
 
-from libtest import *
+from ubirch.anchoring_kafka import *
 from kafka import *
 
 w3 = Web3(HTTPProvider("http://localhost:8545"))
@@ -37,14 +37,15 @@ queue1 = KafkaConsumer('queue1', bootstrap_servers=port)
 password = args.pwd
 keyfile = args.keyfile
 
-
-sender_address = "0x305152Bd0631070256e25F33A20fcBd6B1c665cd" # Must be generated and funded beforehand
+# This is my account, create a new one and change this address to use the service
+sender_address = "0x31c2CC8b7f15F0A9e7efFdd5Fa02e37E66257744"
 print('sender address :', sender_address)
 print('sender balance (in Wei):', w3.eth.getBalance(sender_address))
 
-# with open(keyfile) as kf:
-#     encrypted_key = kf.read()
-#     private_key = w3.eth.account.decrypt(encrypted_key, password)
+"""Account on My Ether Wallet and keystore file stored on my machine"""
+with open(keyfile) as kf:
+    encrypted_key = kf.read()
+    private_key = w3.eth.account.decrypt(encrypted_key, password)
 
 
 def main(storefunction):
@@ -101,4 +102,4 @@ def storeStringETH(string):
         return False
 
 
-#main(storeStringETH)
+main(storeStringETH)

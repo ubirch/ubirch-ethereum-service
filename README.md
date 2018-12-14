@@ -11,86 +11,22 @@ Please, run in your virtual environment:
 1. Set up the [Kafka]((https://kafka.apache.org/)) server. Useful bash scripts are in bin/ ( ./start-zookeeper.sh, ./start-kafka.sh and./create-all-topics.sh).<br> Three topics should be created : queue1, queue2 and errorQueue. <br>
 
 
-1. [Install Geth](https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum)
+2. [Install Geth](https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum)
 
-2. Download ElasticMQ and create a custom.conf file so it looks like this :
+3. Once the server is running, start sender.py which will send via an infinite loop messages to the first queue (queue1). Those messages will mainly be hex strings (hashes) but there will be also be non hex-strings which will be processed as errors by the service.
 
-
-        include classpath("application.conf")
-
-        // What is the outside visible address of this ElasticMQ node
-        // Used to create the queue URL (may be different from bind address!)
-        node-address {
-            protocol = http
-            host = localhost
-            port = 9324
-            context-path = ""
-        }
-
-        rest-sqs {
-            enabled = true
-            bind-port = 9324
-            bind-hostname = "0.0.0.0"
-            // Possible values: relaxed, strict
-            sqs-limits = strict
-        }
-
-        // Should the node-address be generated from the bind port/hostname
-        // Set this to true e.g. when assigning port automatically by using port 0.
-        generate-node-address = false
-
-
-        queues {
-
-
-          queue1 {
-            defaultVisibilityTimeout = 10 seconds
-            receiveMessageWait = 0 seconds
-            deadLettersQueue {
-                name = "queue1-dead-letters"
-                maxReceiveCount = 10 // from 1 to 1000
-            }
-          }
-
-            queue2 {
-            defaultVisibilityTimeout = 10 seconds
-            receiveMessageWait = 0 seconds
-            deadLettersQueue {
-                name = "queue2-dead-letters"
-                maxReceiveCount = 10 // from 1 to 1000
-            }
-          }
-
-            errorQueue {
-            defaultVisibilityTimeout = 10 seconds
-            receiveMessageWait = 0 seconds
-            deadLettersQueue {
-                name = "errorQueue-dead-letters"
-                maxReceiveCount = 10 // from 1 to 1000
-            }
-          }
-
-        }
-
-3. Run it with :
-
-
-        java -Dconfig.file=custom.conf -jar elasticmq-server-x.x.x.jar
-
-where x.x.x is the number of the version of elasticMQ.
-
-4. Once the server is running, start sender.py which will send via an infinite loop messages to the first queue (queue1). Those messages will mainly be hex strings (hashes) but there will be also be non hex-strings which will be processed as errors by the service.
-
-5. Before running the service, you need to be connected to the Ethereum network.
+4. Before running the service, you need to be connected to an Ethereum node.
 
 <b>  a. If you are on branch master : </b> <br>
 
-The service is connected via web3py to its own node on the Rinkeby public testnet, which is PoA (Proof of Authority) based.
+The service is connected via web3py to the Rinkeby public testnet, which is PoA (Proof of Authority) based. <br>
 
-UPDATE : Ubirch has now its own Rinkeby testnet node running its strato server. If you wish to use this node, before running the service please use the following ssh tunnel :
+Ubirch has now its own Rinkeby testnet node running in stratoserver. If you wish to use this node, before running the service please use the following ssh tunnel :
         
         8545:localhost:8545
         
+The keyfile of your account must be stored on the same machine that you run the service with.
+You can create an account on the ETH Rinkeby testnet on https://www.myetherwallet.com/, and request fake ETH on https://faucet.rinkeby.io/.
 
 <b> If you want to set up your own node : </b> <br>
 Please visit : https://www.rinkeby.io/#geth and download rinkeby.json <br>
@@ -232,7 +168,7 @@ This script will either send errors to the errorQueue or store a Json file {stat
     python ethereumService.py --keyfile=PATHTOKEYFILE --pwd=PASSWORD
     
 
-If you some additional documentation, please run :
+If you need some additional documentation, please run :
 
     python ethereumService.py -h
 

@@ -17,7 +17,7 @@
 # limitations under the License.
 
 
-from libtest import *
+from ubirch.anchoring_kafka import *
 from kafka import *
 
 args = set_arguments("ethereum")
