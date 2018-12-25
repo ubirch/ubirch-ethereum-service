@@ -19,23 +19,40 @@ import binascii
 from web3 import Web3, HTTPProvider
 from web3.middleware import geth_poa_middleware
 
-from ubirch.anchoring_kafka import *
+from lib import *
 from kafka import *
+
+args = set_arguments("ethereum")
+server = args.server
+
+# To unlock your wallet
+password = args.pwd
+keyfile = args.keyfile
+
+
+if server == 'SQS':
+    print("SERVICE USING SQS QUEUE MESSAGING")
+    url = args.url
+    region = args.region
+    aws_secret_access_key = args.accesskey
+    aws_access_key_id = args.keyid
+    queue1 = getQueue('queue1', url, region, aws_secret_access_key, aws_access_key_id)
+    queue2 = getQueue('queue2', url, region, aws_secret_access_key, aws_access_key_id)
+    errorQueue = getQueue('errorQueue', url, region, aws_secret_access_key, aws_access_key_id)
+    producer=None
+
+elif server == 'KAFKA':
+    print("SERVICE USING APACHE KAFKA FOR MESSAGING")
+    port = args.port
+    producer = KafkaProducer(bootstrap_servers=port)
+    queue1 = KafkaConsumer('queue1', bootstrap_servers=port)
+    queue2=None
+    errorQueue=None
 
 w3 = Web3(HTTPProvider("http://localhost:8545"))
 w3.middleware_stack.inject(geth_poa_middleware, layer=0) # Because we are on a Proof of Authority based ETH testnet
 print(w3.version.node)
 
-args = set_arguments("ethereum")
-
-#Kafka
-port = args.port
-producer = KafkaProducer(bootstrap_servers=port)
-queue1 = KafkaConsumer('queue1', bootstrap_servers=port)
-
-# To unlock your wallet
-password = args.pwd
-keyfile = args.keyfile
 
 # This is my account, create a new one and change this address to use the service
 sender_address = "0x31c2CC8b7f15F0A9e7efFdd5Fa02e37E66257744"
@@ -46,15 +63,6 @@ print('sender balance (in Wei):', w3.eth.getBalance(sender_address))
 with open(keyfile) as kf:
     encrypted_key = kf.read()
     private_key = w3.eth.account.decrypt(encrypted_key, password)
-
-
-def main(storefunction):
-    """Continuously polls the queue for messages
-    Anchors a hash from queue1
-    Sends the TxID + hash (json file) in queue2 and errors are sent in errorQueue
-    Runs continuously (check if messages are available in queue1)"""
-    while True:
-        poll(queue1, 'errorQueue', 'queue2', storefunction, producer)
 
 
 def storeStringETH(string):
@@ -100,6 +108,14 @@ def storeStringETH(string):
 
     else:
         return False
+
+def main(storefunction):
+    """Continuously polls the queue for messages
+    Anchors a hash from queue1
+    Sends the TxID + hash (json file) in queue2 and errors are sent in errorQueue
+    Runs continuously (check if messages are available in queue1)"""
+    while True:
+        poll(queue1, errorQueue, queue2, storefunction, server, producer)
 
 
 main(storeStringETH)
