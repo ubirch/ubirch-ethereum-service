@@ -19,7 +19,7 @@ import binascii
 from web3 import Web3, HTTPProvider
 from web3.middleware import geth_poa_middleware
 
-from lib import *
+from ubirch.anchoring import *
 from kafka import *
 
 args = set_arguments("ethereum")

@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from lib import *
+from ubirch.anchoring import *
 from kafka import *
 
 args = set_arguments("ethereum")
