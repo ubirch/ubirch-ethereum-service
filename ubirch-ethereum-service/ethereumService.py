@@ -39,18 +39,18 @@ if server == 'SQS':
     queue1 = getQueue('queue1', url, region, aws_secret_access_key, aws_access_key_id)
     queue2 = getQueue('queue2', url, region, aws_secret_access_key, aws_access_key_id)
     errorQueue = getQueue('errorQueue', url, region, aws_secret_access_key, aws_access_key_id)
-    producer=None
+    producer = None
 
 elif server == 'KAFKA':
     print("SERVICE USING APACHE KAFKA FOR MESSAGING")
     port = args.port
     producer = KafkaProducer(bootstrap_servers=port)
     queue1 = KafkaConsumer('queue1', bootstrap_servers=port)
-    queue2=None
-    errorQueue=None
+    queue2 = None
+    errorQueue = None
 
 w3 = Web3(HTTPProvider("http://localhost:8545"))
-w3.middleware_stack.inject(geth_poa_middleware, layer=0) # Because we are on a Proof of Authority based ETH testnet
+w3.middleware_stack.inject(geth_poa_middleware, layer=0)  # Because we are on a Proof of Authority based ETH testnet
 print(w3.version.node)
 
 
