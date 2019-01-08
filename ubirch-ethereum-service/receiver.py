@@ -28,7 +28,7 @@ if server == 'SQS':
     aws_secret_access_key = args.accesskey
     aws_access_key_id = args.keyid
     queue2 = getQueue('queue2', url, region, aws_secret_access_key, aws_access_key_id)
-    producer=None
+    producer = None
 
     while True:
         response = queue2.receive_messages()
