@@ -1,3 +1,0 @@
-[2018-11-16 15:01:30,153] INFO Got user-level KeeperException when processing sessionid:0x10000035dd80000 type:setData cxid:0x4d zxid:0x31 txntype:-1 reqpath:n/a Error Path:/config/topics/queue1 Error:KeeperErrorCode = NoNode for /config/topics/queue1 (org.apache.zookeeper.server.PrepRequestProcessor)
-[2018-11-16 15:05:53,395] INFO Processed session termination for sessionid: 0x10000035dd80000 (org.apache.zookeeper.server.PrepRequestProcessor)
-[2018-11-16 15:05:53,410] INFO Closed socket connection for client /127.0.0.1:56650 which had sessionid 0x10000035dd80000 (org.apache.zookeeper.server.NIOServerCnxn)

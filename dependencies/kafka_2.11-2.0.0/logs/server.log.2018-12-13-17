@@ -1,2 +1,0 @@
-[2018-12-13 17:20:27,618] INFO Expiring session 0x100005e71180000, timeout of 6000ms exceeded (org.apache.zookeeper.server.ZooKeeperServer)
-[2018-12-13 17:20:38,331] INFO Processed session termination for sessionid: 0x100005e71180000 (org.apache.zookeeper.server.PrepRequestProcessor)
