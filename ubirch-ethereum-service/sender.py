@@ -20,7 +20,7 @@ import hashlib
 from ubirch.anchoring import *
 from kafka import *
 
-args = set_arguments("IOTA")
+args = set_arguments("ethereum")
 server = args.server
 
 if server == 'SQS':
