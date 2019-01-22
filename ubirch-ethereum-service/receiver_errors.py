@@ -18,7 +18,7 @@
 from ubirch.anchoring import *
 from kafka import *
 
-args = set_arguments("IOTA")
+args = set_arguments("ethereum")
 server = args.server
 
 if server == 'SQS':
@@ -27,11 +27,11 @@ if server == 'SQS':
     region = args.region
     aws_secret_access_key = args.accesskey
     aws_access_key_id = args.keyid
-    errorQueue = get_queue('error_queue', url, region, aws_secret_access_key, aws_access_key_id)
+    error_queue = get_queue('error_queue', url, region, aws_secret_access_key, aws_access_key_id)
     producer = None
 
     while True:
-        errors = errorQueue.receive_messages()
+        errors = error_queue.receive_messages()
         for e in errors:
             print(e.body)
             e.delete()
@@ -41,8 +41,9 @@ elif server == 'KAFKA':
     print("SERVICE USING APACHE KAFKA FOR MESSAGING")
     port = args.port
     producer = KafkaProducer(bootstrap_servers=port)
-    errorQueue = KafkaConsumer('error_queue', bootstrap_servers=port, value_deserializer=lambda m: json.loads(m.decode('ascii')))
-    for message in errorQueue:
+    error_queue = KafkaConsumer('error_queue', bootstrap_servers=port,
+                                value_deserializer=lambda m: json.loads(m.decode('ascii')))
+    for message in error_queue:
         print(json.dumps(message.value))
 
 

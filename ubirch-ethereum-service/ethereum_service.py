@@ -26,7 +26,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 
-"""
+""" 
     The code below is used to initialize parameters passed in arguments in the terminal.
     Before starting the service one must choose between --server='SQS' or --server='KAFKA' depending on the message
     queuing service desired.
@@ -36,10 +36,6 @@ from logging.handlers import RotatingFileHandler
 
 args = set_arguments("ethereum")
 server = args.server
-
-# To unlock your wallet
-password = args.pwd
-keyfile = args.keyfile
 
 
 """
@@ -106,12 +102,15 @@ logger.info(w3.version.node)
     It will generate a new address & associated private key in a password encrypted file
 """
 sender_address = args.address
-logger.info('sender address :', sender_address)
-logger.info('sender balance (in Wei):', w3.eth.getBalance(sender_address))
+logger.info('sender address : %s' % sender_address)
+logger.info('sender balance (in Wei): %s' % str(w3.eth.getBalance(sender_address)))
 
 """
     Account on My Ether Wallet and keystore file stored on my machine
 """
+password = args.pwd
+keyfile = args.keyfile
+
 with open(keyfile) as kf:
     encrypted_key = kf.read()
     private_key = w3.eth.account.decrypt(encrypted_key, password)
@@ -136,8 +135,9 @@ def store_eth(string):
     """
 
     if is_hex(string):
-        nonce = w3.eth.getTransactionCount(sender_address)
-        logger.info("Nonce = ", nonce)
+        logger.debug("'%s' ready to be sent" % string)
+        nonce = w3.eth.getTransactionCount(sender_address) + 1
+        logger.info("Nonce = %s" % nonce)
         txn_dict = {
             'to': sender_address,
             'from': sender_address,  # From is an optional field
@@ -158,7 +158,7 @@ def store_eth(string):
         count = 0
         while txn_receipt is None and (count < 30): # We wait until our tx is mined
             txn_receipt = w3.eth.getTransactionReceipt(txn_hash)
-            print(txn_receipt)
+            logger.debug(txn_receipt)
             count += 1
             time.sleep(10)
 
@@ -166,6 +166,7 @@ def store_eth(string):
             logger.info({'status': 'timeout', 'message': string})
             return {'status': 'timeout', 'message': string}
 
+        logger.debug("'%s' sent" % string)
         logger.info({'status': 'added', 'txid': txn_hash_str, 'message': string})
         return {'status': 'added', 'txid': txn_hash_str, 'message': string}
 
@@ -177,7 +178,7 @@ def main(store_function):
     """
         Continuously polls the queue for messages
         Anchors a hash from queue1
-        Sends the TxID + hash (json file) in queue2 and errors are sent in errorQueue
+        Sends the TxID + hash (json file) in queue2 and errors are sent in error_queue
         Runs continuously (check if messages are available in queue1)
     """
     while True:
