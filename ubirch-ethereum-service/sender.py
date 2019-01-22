@@ -17,10 +17,10 @@
 
 import time
 import hashlib
-from kafka import *
 from ubirch.anchoring import *
+from kafka import *
 
-args = set_arguments("ethereum")
+args = set_arguments("IOTA")
 server = args.server
 
 if server == 'SQS':
@@ -29,7 +29,7 @@ if server == 'SQS':
     region = args.region
     aws_secret_access_key = args.accesskey
     aws_access_key_id = args.keyid
-    queue1 = getQueue('queue1', url, region, aws_secret_access_key, aws_access_key_id)
+    queue1 = get_queue('queue1', url, region, aws_secret_access_key, aws_access_key_id)
     producer = None
 
 elif server == 'KAFKA':
@@ -47,11 +47,11 @@ while True:
         send("error %s" % i, server, queue=queue1, topic='queue1', producer=producer)
         print("error %s sent" % i)
         i += 1
-        time.sleep(1)
+        time.sleep(0.5)
 
     else:  # Sends in queue1 the sha256 hash of the time()
         send(message,  server, queue=queue1, topic='queue1', producer=producer)
         print("message %s sent" % j)
         j += 1
-        time.sleep(1)
+        time.sleep(0.5)
 
