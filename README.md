@@ -23,7 +23,7 @@ Please run in your virtual environment:
 
 Before running the service, you need to be connected to an Ethereum node. Please, [Install Geth](https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum) <br>
 
-<b>If you are on branch master : </b> <br>
+<b>a. If you are on branch master: </b> <br>
 
 The service is connected via web3py to the Rinkeby public testnet, which is PoA (Proof of Authority) based. <br>
 
@@ -146,7 +146,39 @@ and *receiver_errors.py*, with the flag **--server='SQS'** or **--server='KAFKA'
     - --server='KAFKA' to use Apache's Kafka messaging service.
     - -kf PATH_TO_KEYFILE specifies the location of your keyfile
     - -pwd KEYFILE_PASSWORD specifies the password to your keyfile
-      
+   
+<b> b. If you want to set up your own node : </b> <br>
+Please visit : https://www.rinkeby.io/#geth and download rinkeby.json <br>
+
+
+To initialize, execute:
+
+    geth --datadir=YOUR_DATA_DIR init PATH_TO_rinkeby.json
+
+Then, execute:
+
+    geth --rinkeby --datadir YOUR_DATA_DIR --fast --rpc --rpcapi db,eth,net,web3,personal --cache=1024  --rpcport 8545 --rpcaddr 0.0.0.0 --rpccorsdomain "*" --bootnodes=enode://a24ac7c5484ef4ed0c5eb2d36620ba4e4aa13b8c84684e1b4aab0cebea2ae45cb4d375b77eab56516d34bfbd3c1a833fc51296ff084b770b94fb9028c4d25ccf@52.169.42.101:30303
+
+To use the geth console, open another terminal and execute :
+
+    geth --datadir YOUR_DATA_DIR attach
+
+To check the syncing, execute in the Geth terminal:
+
+    eth.syncing //output : false when fully synchronised
+   
+To create a new account :
+
+    >personal.newAccount("notmyrealpassword")
+    "0xb2e9fe08ca9a0323103883fe12c9609ed380f475"
+    > eth.coinbase
+    "0xb2e9fe08ca9a0323103883fe12c9609ed380f475"
+    > eth.getBalance(eth.coinbase)
+    0
+
+To request ETH : https://faucet.rinkeby.io/ <br>
+Once the node is up and running and you have access ( = keyfile on your machine and known password)
+to an address with Rinkeby ETH on it, you can start the service.
 
 ## Logs
 
