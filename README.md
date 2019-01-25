@@ -3,9 +3,8 @@ This is a command line interface python service developed to anchor data on the 
 
 Default address used in the service:
 **0x31c2CC8b7f15F0A9e7efFdd5Fa02e37E66257744**<br>
-Click [here](hhttps://rinkeby.etherscan.io/address/0x31c2CC8b7f15F0A9e7efFdd5Fa02e37E66257744) to see all transactions made with this address.
+Click [here](hhttps://rinkeby.etherscan.io/address/0x31c2CC8b7f15F0A9e7efFdd5Fa02e37E66257744) to see all transactions made with this address.<br>
 
-To setup a new address, please run: *generate_address.py* and pass the address generated as argument in the CLI.<br><br>
 Help concerning the CLI can be found running:
 ```bash
 python ethereum_service.py --help
@@ -22,12 +21,10 @@ Please run in your virtual environment:
 ## How to use this service
 
 
-Before running the service, you need to be connected to an Ethereum node.
+Before running the service, you need to be connected to an Ethereum node. Please, [Install Geth](https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum) <br>
 
+<b>If you are on branch master : </b> <br>
 
-<b>If you are on branch master: </b> <br>
-
-First, [Install Geth](https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum) <br>
 The service is connected via web3py to the Rinkeby public testnet, which is PoA (Proof of Authority) based. <br>
 
 Ubirch has its own Rinkeby testnet node running in stratoserver. If you wish to use this node, before running the service please use the following ssh tunnel :

@@ -1,3 +1,4 @@
+FROM python:3.6
 
 LABEL description="ubirch Ethereum anchoring service"
 
