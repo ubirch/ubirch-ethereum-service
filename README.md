@@ -3,7 +3,7 @@ This is a command line interface python service developed to anchor data on the 
 
 Default address used in the service:
 **0x31c2CC8b7f15F0A9e7efFdd5Fa02e37E66257744**<br>
-Click [here](hhttps://rinkeby.etherscan.io/address/0x31c2CC8b7f15F0A9e7efFdd5Fa02e37E66257744) to see all transactions made with this address.<br>
+Click [here](https://rinkeby.etherscan.io/address/0x31c2CC8b7f15F0A9e7efFdd5Fa02e37E66257744) to see all transactions made with this address.<br>
 
 Help concerning the CLI can be found running:
 ```bash
