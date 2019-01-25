@@ -91,8 +91,10 @@ elif server == 'KAFKA':
     queue2 = None
     error_queue = None
 
-eth_node = args.node
-w3 = Web3(HTTPProvider(eth_node))
+node_address = args.node
+logger.info("connected to node: %s" % node_address)
+w3 = Web3(HTTPProvider(node_address))
+
 w3.middleware_stack.inject(geth_poa_middleware, layer=0)  # Because we are on a Proof of Authority based ETH testnet
 logger.info(w3.version.node)
 
@@ -136,7 +138,7 @@ def store_eth(string):
 
     if is_hex(string):
         logger.debug("'%s' ready to be sent" % string)
-        nonce = w3.eth.getTransactionCount(sender_address) + 1
+        nonce = w3.eth.getTransactionCount(sender_address)
         logger.info("Nonce = %s" % nonce)
         txn_dict = {
             'to': sender_address,
