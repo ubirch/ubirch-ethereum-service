@@ -1,5 +1,5 @@
 # ubirch-ethereum-service
-This is a command line interface python service developed to anchor data on the Ethereum BLockchain.<br>
+This is a command line interface python service developed to anchor data on the Ethereum Blockchain.<br>
 
 Default address used in the service:
 **0x31c2CC8b7f15F0A9e7efFdd5Fa02e37E66257744**<br>
