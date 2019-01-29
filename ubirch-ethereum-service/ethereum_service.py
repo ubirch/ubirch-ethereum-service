@@ -74,22 +74,32 @@ logger.info("You are using ubirch's Ethereum anchoring service")
 
 if server == 'SQS':
     logger.info("SERVICE USING SQS QUEUE MESSAGING")
+
+    input_messages = args.input
+    output_messages = args.output
+    error_messages = args.errors
+
     url = args.url
     region = args.region
     aws_secret_access_key = args.accesskey
     aws_access_key_id = args.keyid
-    queue1 = get_queue('queue1', url, region, aws_secret_access_key, aws_access_key_id)
-    queue2 = get_queue('queue2', url, region, aws_secret_access_key, aws_access_key_id)
-    error_queue = get_queue('error_queue', url, region, aws_secret_access_key, aws_access_key_id)
+
+    input_messages = get_queue(input_messages, url, region, aws_secret_access_key, aws_access_key_id)
+    output_messages = get_queue(output_messages, url, region, aws_secret_access_key, aws_access_key_id)
+    error_messages = get_queue(error_messages, url, region, aws_secret_access_key, aws_access_key_id)
     producer = None
 
 elif server == 'KAFKA':
     logger.info("SERVICE USING APACHE KAFKA FOR MESSAGING")
+
+    input_messages = args.input
+    output_messages = args.output
+    error_messages = args.errors
+
     bootstrap_server = args.bootstrap_server
     producer = KafkaProducer(bootstrap_servers=bootstrap_server)
-    queue1 = KafkaConsumer('queue1', bootstrap_servers=bootstrap_server)
-    queue2 = None
-    error_queue = None
+    input_messages = KafkaConsumer(input_messages, bootstrap_servers=bootstrap_server)
+
 
 node_address = args.node
 logger.info("connected to node: %s" % node_address)
@@ -178,12 +188,12 @@ def store_eth(string):
 def main(store_function):
     """
         Continuously polls the queue for messages
-        Anchors a hash from queue1
-        Sends the TxID + hash (json file) in queue2 and errors are sent in error_queue
-        Runs continuously (check if messages are available in queue1)
+        Anchors a hash from input_messages
+        Sends the TxID + hash (json file) in output_messages and errors are sent in error_messages
+        Runs continuously (check if messages are available in input_messages)
     """
     while True:
-        poll(queue1, error_queue, queue2, store_function, server, producer)
+        poll(input_messages, error_messages, output_messages, store_function, server, producer)
 
 
 main(store_eth)

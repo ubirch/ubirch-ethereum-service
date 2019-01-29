@@ -25,32 +25,42 @@ server = args.server
 
 if server == 'SQS':
     print("SERVICE USING SQS QUEUE MESSAGING")
+
+    input_messages = args.input
+    output_messages = args.output
+    error_messages = args.errors
+
     url = args.url
     region = args.region
     aws_secret_access_key = args.accesskey
     aws_access_key_id = args.keyid
-    queue1 = get_queue('queue1', url, region, aws_secret_access_key, aws_access_key_id)
+
+    input_messages = get_queue(input_messages, url, region, aws_secret_access_key, aws_access_key_id)
     producer = None
 
 elif server == 'KAFKA':
     print("SERVICE USING APACHE KAFKA FOR MESSAGING")
+
+    input_messages = args.input
+    output_messages = args.output
+    error_messages = args.errors
+
     bootstrap_server = args.bootstrap_server
     producer = KafkaProducer(bootstrap_servers=bootstrap_server)
-    queue1 = None
 
 i = 1
 j = 1
 while True:
     t = str(time.time()).encode('utf-8')
     message = hashlib.sha256(t).hexdigest()
-    if '0' in message[0:8]:  # Error propagation in queue1
-        send("error %s" % i, server, queue=queue1, topic='queue1', producer=producer)
+    if '0' in message[0:8]:  # Error propagation in input_messages
+        send("error %s" % i, server, queue=input_messages, topic=input_messages, producer=producer)
         print("error %s sent" % i)
         i += 1
         time.sleep(0.5)
 
-    else:  # Sends in queue1 the sha256 hash of the time()
-        send(message,  server, queue=queue1, topic='queue1', producer=producer)
+    else:  # Sends in input_messages the sha256 hash of the time()
+        send(message,  server, queue=input_messages, topic=input_messages, producer=producer)
         print("message %s sent" % j)
         j += 1
         time.sleep(0.5)
