@@ -9,6 +9,7 @@ Help concerning the CLI can be found running:
 ```bash
 python ethereum_service.py --help
 ```
+## Build from docker 
 
 ## Configuration
 

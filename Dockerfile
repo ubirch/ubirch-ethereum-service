@@ -8,7 +8,7 @@ ARG LOGLEVEL='DEBUG'
 ARG ETH_NODE="http://localhost:8545"
 ARG ETH_ADDRESS='0x31c2CC8b7f15F0A9e7efFdd5Fa02e37E66257744'
 
-ARG KAFKA_PORT=['localhost:9092']
+ARG KAFKA_BOOTSTRAP_SERVER='localhost:9092'
 
 ARG SQS_URL="http://localhost:9324"
 ARG SQS_REGION="elasticmq"
@@ -25,7 +25,7 @@ ENV ETH_ADDRESS=${ETH_ADDRESS}
 ENV KEYFILE_PATH=${KEYFILE_PATH}
 ENV KEYFILE_PWD=${KEYFILE_PWD}
 
-ENV KAFKA_PORT=${KAFKA_PORT}
+ENV KAFKA_BOOTSTRAP_SERVER=${KAFKA_BOOTSTRAP_SERVER}
 
 # Parametrizes the SQS server
 ENV SQS_URL=${SQS_URL}
@@ -38,11 +38,11 @@ WORKDIR /ethereum-service/
 COPY requirements.txt /ethereum-service/
 RUN pip install -r requirements.txt
 
-COPY ubirch-ethereum-service/UTC--testing /ethereum-service
-
 COPY ubirch-ethereum-service/ethereum_service.py /ethereum-service/
-
 COPY start.sh /ethereum-service/
 RUN chmod +x ./start.sh
+
+COPY keyfile /ethereum-service
+
 
 CMD ["./start.sh"]

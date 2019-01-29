@@ -34,8 +34,8 @@ if server == 'SQS':
 
 elif server == 'KAFKA':
     print("SERVICE USING APACHE KAFKA FOR MESSAGING")
-    port = args.port
-    producer = KafkaProducer(bootstrap_servers=port)
+    bootstrap_server = args.bootstrap_server
+    producer = KafkaProducer(bootstrap_servers=bootstrap_server)
     queue1 = None
 
 i = 1

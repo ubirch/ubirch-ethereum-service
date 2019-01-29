@@ -39,9 +39,9 @@ if server == 'SQS':
 
 elif server == 'KAFKA':
     print("SERVICE USING APACHE KAFKA FOR MESSAGING")
-    port = args.port
-    producer = KafkaProducer(bootstrap_servers=port)
-    queue2 = KafkaConsumer('queue2', bootstrap_servers=port, value_deserializer=lambda m: json.loads(m.decode('ascii')))
+    bootstrap_server = args.bootstrap_server
+    producer = KafkaProducer(bootstrap_servers=bootstrap_server)
+    queue2 = KafkaConsumer('queue2', bootstrap_servers=bootstrap_server, value_deserializer=lambda m: json.loads(m.decode('ascii')))
     for message in queue2:
         print(json.dumps(message.value))
 

@@ -85,9 +85,9 @@ if server == 'SQS':
 
 elif server == 'KAFKA':
     logger.info("SERVICE USING APACHE KAFKA FOR MESSAGING")
-    port = args.port
-    producer = KafkaProducer(bootstrap_servers=port)
-    queue1 = KafkaConsumer('queue1', bootstrap_servers=port)
+    bootstrap_server = args.bootstrap_server
+    producer = KafkaProducer(bootstrap_servers=bootstrap_server)
+    queue1 = KafkaConsumer('queue1', bootstrap_servers=bootstrap_server)
     queue2 = None
     error_queue = None
 
