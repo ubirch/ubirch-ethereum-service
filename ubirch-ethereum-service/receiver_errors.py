@@ -23,6 +23,8 @@ server = args.server
 
 if server == 'SQS':
     print("SERVICE USING SQS QUEUE MESSAGING")
+    print("error queue name : %s" % args.errors)
+
 
     url = args.url
     region = args.region
@@ -41,6 +43,7 @@ if server == 'SQS':
 
 elif server == 'KAFKA':
     print("SERVICE USING APACHE KAFKA FOR MESSAGING")
+    print("error topic name : %s" % args.errors)
 
     bootstrap_server = args.bootstrap_server
     producer = KafkaProducer(bootstrap_servers=bootstrap_server)
