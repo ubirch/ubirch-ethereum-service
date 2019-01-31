@@ -75,18 +75,14 @@ logger.info("You are using ubirch's Ethereum anchoring service")
 if server == 'SQS':
     logger.info("SERVICE USING SQS QUEUE MESSAGING")
 
-    input_messages = args.input
-    output_messages = args.output
-    error_messages = args.errors
-
     url = args.url
     region = args.region
     aws_secret_access_key = args.accesskey
     aws_access_key_id = args.keyid
 
-    input_messages = get_queue(input_messages, url, region, aws_secret_access_key, aws_access_key_id)
-    output_messages = get_queue(output_messages, url, region, aws_secret_access_key, aws_access_key_id)
-    error_messages = get_queue(error_messages, url, region, aws_secret_access_key, aws_access_key_id)
+    input_messages = get_queue(args.input, url, region, aws_secret_access_key, aws_access_key_id)
+    output_messages = get_queue(args.output, url, region, aws_secret_access_key, aws_access_key_id)
+    error_messages = get_queue(args.errors, url, region, aws_secret_access_key, aws_access_key_id)
     producer = None
 
 elif server == 'KAFKA':
@@ -98,7 +94,7 @@ elif server == 'KAFKA':
 
     bootstrap_server = args.bootstrap_server
     producer = KafkaProducer(bootstrap_servers=bootstrap_server)
-    input_messages = KafkaConsumer(input_messages, bootstrap_servers=bootstrap_server)
+    input_messages = KafkaConsumer(args.input, bootstrap_servers=bootstrap_server)
 
 
 node_address = args.node

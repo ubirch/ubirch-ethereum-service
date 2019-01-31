@@ -25,14 +25,12 @@ if server == 'SQS':
     print("SERVICE USING SQS QUEUE MESSAGING")
     print("error queue name : %s" % args.errors)
 
-
     url = args.url
     region = args.region
     aws_secret_access_key = args.accesskey
     aws_access_key_id = args.keyid
 
     error_messages = get_queue(args.errors, url, region, aws_secret_access_key, aws_access_key_id)
-    producer = None
 
     while True:
         errors = error_messages.receive_messages()
@@ -46,9 +44,7 @@ elif server == 'KAFKA':
     print("error topic name : %s" % args.errors)
 
     bootstrap_server = args.bootstrap_server
-    producer = KafkaProducer(bootstrap_servers=bootstrap_server)
     error_messages = KafkaConsumer(args.errors, bootstrap_servers=bootstrap_server,
-                                   value_deserializer=lambda m: m.decode('ascii'))
-
+                                   value_deserializer=lambda m: json.dumps(m.decode('ascii')))
     for message in error_messages:
-        print(message.value)
+        print(json.loads(message.value))

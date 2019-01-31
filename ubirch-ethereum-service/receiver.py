@@ -45,11 +45,10 @@ elif server == 'KAFKA':
     print("output topic name : %s" % args.output)
 
     bootstrap_server = args.bootstrap_server
-    producer = KafkaProducer(bootstrap_servers=bootstrap_server)
     output_messages = KafkaConsumer(args.output, bootstrap_servers=bootstrap_server,
-                                    value_deserializer=lambda m: m.decode('ascii'))
+                                    value_deserializer=lambda m: json.dumps(m.decode('ascii')))
     for message in output_messages:
-        print(message.value)
+        print(json.loads(message.value))
 
 
 
