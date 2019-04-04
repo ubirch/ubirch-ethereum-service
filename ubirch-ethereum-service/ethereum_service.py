@@ -52,7 +52,7 @@ log_levels = {
 
 logger = logging.getLogger('ubirch-ethereum-service')
 level = log_levels.get(args.loglevel.lower())
-logger.setLevel(level)
+logger.setLevel(logging.DEBUG)
 
 
 # Formatter adding time, name and level of each message when a message is written in the logs
@@ -178,6 +178,7 @@ def store_eth(string):
         return {'status': 'added', 'txid': txn_hash_str, 'message': string}
 
     else:
+        logger.debug("invalid data: %s" % (string))
         return False
 
 
