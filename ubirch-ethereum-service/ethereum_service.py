@@ -18,6 +18,7 @@ import time
 import binascii
 from web3 import Web3, HTTPProvider
 from web3.middleware import geth_poa_middleware
+import datetime
 
 from ubirch.anchoring import *
 from kafka import *
@@ -169,13 +170,15 @@ def store_eth(string):
             count += 1
             time.sleep(10)
 
+        created = datetime.datetime.now().isoformat()
+
         if txn_receipt is None:
             logger.info({'status': 'timeout', 'message': string})
-            return {'status': 'timeout', 'message': string}
+            return {'status': 'timeout', 'message': string, 'blockchain': 'ethereum' , 'network_info': 'Rinkeby Testnet Network','network_type': 'testnet', 'created': created}
 
         logger.debug("'%s' sent" % string)
         logger.info({'status': 'added', 'txid': txn_hash_str, 'message': string})
-        return {'status': 'added', 'txid': txn_hash_str, 'message': string}
+        return {'status': 'added', 'txid': txn_hash_str, 'message': string, 'blockchain': 'ethereum' , 'network_info': 'Rinkeby Testnet Network', 'network_type': 'testnet', 'created': created}
 
     else:
         logger.debug("invalid data: %s" % (string))
