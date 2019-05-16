@@ -168,7 +168,7 @@ def store_eth(string):
             txn_receipt = w3.eth.getTransactionReceipt(txn_hash)
             logger.debug(txn_receipt)
             count += 1
-            time.sleep(10)
+            time.sleep(5)
 
         created = datetime.datetime.now().isoformat()
 
