@@ -53,23 +53,22 @@ log_levels = {
 
 logger = logging.getLogger('ubirch-ethereum-service')
 level = log_levels.get(args.loglevel.lower())
-logger.setLevel(logging.DEBUG)
+logger.setLevel(level)
 
 
 # Formatter adding time, name and level of each message when a message is written in the logs
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 # Handler redirecting logs in a file in 'append' mode, with 1 backup and 1Mo max size
-file_handler = RotatingFileHandler('ethereum_service.log', mode='a', maxBytes=1000000, backupCount=1)
-file_handler.setLevel(logging.DEBUG)
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
+# file_handler = RotatingFileHandler('ethereum_service.log', mode='a', maxBytes=1000000, backupCount=1)
+# file_handler.setLevel(logging.DEBUG)
+# file_handler.setFormatter(formatter)
+# logger.addHandler(file_handler)
 
 # Handler on the console
 stream_handler = logging.StreamHandler()
 stream_handler.setLevel(logging.DEBUG)
 logger.addHandler(stream_handler)
-
 
 logger.info("You are using ubirch's Ethereum anchoring service")
 
@@ -175,12 +174,12 @@ def store_eth(string):
         created = datetime.datetime.now().isoformat()
 
         if txn_receipt is None:
-            logger.error({'status': 'timeout', 'message': string})
-            return {'status': 'timeout', 'message': string, 'blockchain': 'ethereum' , 'network_info': networkinfo,'network_type': networktype, 'created': created}
+            logger.error({'status': 'timeout', 'message': string, 'blockchain': 'ethereum', 'network_info': networkinfo,'network_type': networktype, 'created': created})
+            return {'status': 'timeout', 'message': string, 'blockchain': 'ethereum', 'network_info': networkinfo,'network_type': networktype, 'created': created}
 
         logger.debug("'%s' sent" % string)
-        logger.info({'status': 'added', 'txid': txn_hash_str, 'message': string})
-        return {'status': 'added', 'txid': txn_hash_str, 'message': string, 'blockchain': 'ethereum' , 'network_info': networkinfo, 'network_type': networktype, 'created': created}
+        logger.info({'status': 'added', 'txid': txn_hash_str, 'message': string, 'blockchain': 'ethereum', 'network_info': networkinfo, 'network_type': networktype, 'created': created})
+        return {'status': 'added', 'txid': txn_hash_str, 'message': string, 'blockchain': 'ethereum', 'network_info': networkinfo, 'network_type': networktype, 'created': created}
 
     else:
         logger.error("invalid data: %s" % (string))
