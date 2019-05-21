@@ -1,10 +1,13 @@
-FROM python:3.6
+FROM python:3.6-alpine
 
 LABEL description="ubirch Ethereum anchoring service"
 
 ARG KEYFILE
 
 WORKDIR /ethereum-service/
+
+RUN apk update
+RUN apk add build-base libffi-dev openssl-dev
 
 COPY requirements.txt /ethereum-service/
 RUN pip install -r requirements.txt

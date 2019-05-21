@@ -104,6 +104,8 @@ w3 = Web3(HTTPProvider(node_address))
 w3.middleware_stack.inject(geth_poa_middleware, layer=0)  # Because we are on a Proof of Authority based ETH testnet
 logger.info(w3.version.node)
 
+networktype = args.networktype
+networkinfo = args.networkinfo
 
 """
     This is my account, create a new one and change this address to use the service
@@ -173,15 +175,15 @@ def store_eth(string):
         created = datetime.datetime.now().isoformat()
 
         if txn_receipt is None:
-            logger.info({'status': 'timeout', 'message': string})
-            return {'status': 'timeout', 'message': string, 'blockchain': 'ethereum' , 'network_info': 'Rinkeby Testnet Network','network_type': 'testnet', 'created': created}
+            logger.error({'status': 'timeout', 'message': string})
+            return {'status': 'timeout', 'message': string, 'blockchain': 'ethereum' , 'network_info': networkinfo,'network_type': networktype, 'created': created}
 
         logger.debug("'%s' sent" % string)
         logger.info({'status': 'added', 'txid': txn_hash_str, 'message': string})
-        return {'status': 'added', 'txid': txn_hash_str, 'message': string, 'blockchain': 'ethereum' , 'network_info': 'Rinkeby Testnet Network', 'network_type': 'testnet', 'created': created}
+        return {'status': 'added', 'txid': txn_hash_str, 'message': string, 'blockchain': 'ethereum' , 'network_info': networkinfo, 'network_type': networktype, 'created': created}
 
     else:
-        logger.debug("invalid data: %s" % (string))
+        logger.error("invalid data: %s" % (string))
         return False
 
 
