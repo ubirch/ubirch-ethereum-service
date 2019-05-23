@@ -106,6 +106,10 @@ logger.info(w3.version.node)
 networktype = args.networktype
 networkinfo = args.networkinfo
 
+gas = args.gas
+gasprice = args.gasprice
+chainid = args.chainid
+
 """
     This is my account, create a new one and change this address to use the service
     It will generate a new address & associated private key in a password encrypted file
@@ -143,6 +147,8 @@ def store_eth(string):
 
     """
 
+    logger.info('sender balance (in Wei): %s' % str(w3.eth.getBalance(sender_address)))
+
     if is_hex(string):
         logger.debug("'%s' ready to be sent" % string)
         nonce = w3.eth.getTransactionCount(sender_address)
@@ -152,10 +158,10 @@ def store_eth(string):
             'from': sender_address,  # From is an optional field
             'value': 0,
             'data': string,
-            'gas': 640000,
-            'gasPrice': w3.toWei('40', 'gwei'),
+            'gas': gas,
+            'gasPrice': w3.toWei(gasprice, 'gwei'),
             'nonce': nonce,
-            'chainId': 4  # 3 is the chainId of the Ropsten testnet, 4 is the one of Rinkeby
+            'chainId': chainid  # 3 is the chainId of the Ropsten testnet, 4 is the one of Rinkeby, 1 is mainnet
         }
 
         signed_tx = w3.eth.account.signTransaction(txn_dict, private_key)
