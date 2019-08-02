@@ -106,6 +106,10 @@ logger.info(w3.version.node)
 networktype = args.networktype
 networkinfo = args.networkinfo
 
+blockchain = 'ethereum'
+if "classic" in networkinfo.lower():
+    blockchain = 'ethereum-classic'
+
 gas = args.gas
 gasprice = args.gasprice
 chainid = args.chainid
@@ -172,7 +176,7 @@ def store_eth(string):
         txn_receipt = None
         count = 0
         while txn_receipt is None and (count < 30): # We wait until our tx is mined
-            txn_receipt = w3.eth.getTransactionReceipt(txn_hash)
+            txn_receipt = w3.eth.getTransactionReceipt(txn_hash, timeout=180)
             logger.debug(txn_receipt)
             count += 1
             time.sleep(5)
@@ -180,12 +184,12 @@ def store_eth(string):
         created = datetime.datetime.now().isoformat()
 
         if txn_receipt is None:
-            logger.error({'status': 'timeout', 'message': string, 'blockchain': 'ethereum', 'network_info': networkinfo,'network_type': networktype, 'created': created})
-            return {'status': 'timeout', 'message': string, 'blockchain': 'ethereum', 'network_info': networkinfo,'network_type': networktype, 'created': created}
+            logger.error({'status': 'timeout', 'message': string, 'blockchain': blockchain, 'network_info': networkinfo,'network_type': networktype, 'created': created})
+            return {'status': 'timeout', 'message': string, 'blockchain': blockchain, 'network_info': networkinfo,'network_type': networktype, 'created': created}
 
         logger.debug("'%s' sent" % string)
-        logger.info({'status': 'added', 'txid': txn_hash_str, 'message': string, 'blockchain': 'ethereum', 'network_info': networkinfo, 'network_type': networktype, 'created': created})
-        return {'status': 'added', 'txid': txn_hash_str, 'message': string, 'blockchain': 'ethereum', 'network_info': networkinfo, 'network_type': networktype, 'created': created}
+        logger.info({'status': 'added', 'txid': txn_hash_str, 'message': string, 'blockchain': blockchain, 'network_info': networkinfo, 'network_type': networktype, 'created': created})
+        return {'status': 'added', 'txid': txn_hash_str, 'message': string, 'blockchain': blockchain, 'network_info': networkinfo, 'network_type': networktype, 'created': created}
 
     else:
         logger.error("invalid data: %s" % (string))

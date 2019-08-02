@@ -13,4 +13,4 @@ def checksum_encode(addr): # Takes a 20-byte binary address as input
 def test(addrstr):
     assert(addrstr == checksum_encode(bytes.fromhex(addrstr[2:])))
 
-print(checksum_encode(bytes.fromhex('af009717c2a04c1240b7833e5d163d0e8ee7b3ff')))
+print(checksum_encode(bytes.fromhex('2f6bc758319982417b01b6ff09a9860a79c14cbb')))
