@@ -110,6 +110,8 @@ blockchain = 'ethereum'
 if "classic" in networkinfo.lower():
     blockchain = 'ethereum-classic'
 
+logger.info("used blockchain: %s" % blockchain)
+
 gas = args.gas
 gasprice = args.gasprice
 chainid = args.chainid
@@ -176,7 +178,7 @@ def store_eth(string):
         txn_receipt = None
         count = 0
         while txn_receipt is None and (count < 30): # We wait until our tx is mined
-            txn_receipt = w3.eth.getTransactionReceipt(txn_hash, timeout=180)
+            txn_receipt = w3.eth.getTransactionReceipt(txn_hash)
             logger.debug(txn_receipt)
             count += 1
             time.sleep(5)
@@ -203,8 +205,12 @@ def main(store_function):
         Sends the TxID + hash (json file) in output_messages and errors are sent in error_messages
         Runs continuously (check if messages are available in input_messages)
     """
+    logger.info("start processing")
     while True:
-        poll(input_messages, error_messages, output_messages, store_function, server, producer)
-
+        logger.debug("starting loop")
+        try:
+            poll(input_messages, error_messages, output_messages, store_function, server, producer)
+        except:
+            exit(1)
 
 main(store_eth)
