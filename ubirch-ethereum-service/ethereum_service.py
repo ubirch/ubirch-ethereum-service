@@ -22,6 +22,7 @@ import datetime
 
 from ubirch.anchoring import *
 from kafka import *
+from prometheus_client import start_http_server, Gauge
 
 import logging
 from logging.handlers import RotatingFileHandler
@@ -134,6 +135,11 @@ with open(keyfile) as kf:
     encrypted_key = kf.read()
     private_key = w3.eth.account.decrypt(encrypted_key, password)
 
+"""
+  Prometheus Counters
+"""
+
+balance_gauge = Gauge('balance', 'Represents the current balance of the account')
 
 def store_eth(string):
     """
@@ -153,7 +159,9 @@ def store_eth(string):
 
     """
 
-    logger.info('sender balance (in Wei): %s' % str(w3.eth.getBalance(sender_address)))
+    balance = w3.eth.getBalance(sender_address)
+    balance_gauge.set(balance)
+    logger.info('sender balance (in Wei): %s' % str(balance))
 
     if is_hex(string):
         logger.debug("'%s' ready to be sent" % string)
@@ -205,6 +213,11 @@ def main(store_function):
         Sends the TxID + hash (json file) in output_messages and errors are sent in error_messages
         Runs continuously (check if messages are available in input_messages)
     """
+
+    prometheus_port = 4321
+    start_http_server(prometheus_port)
+    logger.info('Prometheus started in port: %s' % str(prometheus_port))
+
     logger.info("start processing")
     while True:
         logger.debug("starting loop")
@@ -212,5 +225,6 @@ def main(store_function):
             poll(input_messages, error_messages, output_messages, store_function, server, producer)
         except:
             exit(1)
+
 
 main(store_eth)
