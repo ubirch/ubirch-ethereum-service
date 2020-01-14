@@ -228,7 +228,6 @@ def main(store_function):
             exit(1)
         except Exception as e2:
             logger.exception("transaction failed, check funds:\n" + str(e2))
-            time.sleep(5)
-
+            exit(1)
 
 main(store_eth)
