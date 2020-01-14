@@ -92,6 +92,8 @@ celerybeat-schedule
 # Environments
 .env
 .venv
+venv
+venv3
 env/
 venv/
 ENV/
@@ -112,3 +114,5 @@ venv.bak/
 .mypy_cache/
 
 .venv3
+
+startLocal.sh

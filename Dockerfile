@@ -15,5 +15,6 @@ COPY start.sh /ethereum-service/
 RUN chmod +x ./start.sh
 
 ENV LOGLEVEL="DEBUG"
+ENV KEYFILE="/etc/ethereum-service/keyfile"
 
 CMD ["./start.sh"]

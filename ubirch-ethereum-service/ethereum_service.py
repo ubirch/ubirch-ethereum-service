@@ -24,6 +24,7 @@ from ubirch.anchoring import *
 from kafka import *
 from prometheus_client import start_http_server, Gauge
 
+import time
 import logging
 from logging.handlers import RotatingFileHandler
 
@@ -223,8 +224,11 @@ def main(store_function):
         logger.debug("starting loop")
         try:
             poll(input_messages, error_messages, output_messages, store_function, server, producer)
-        except:
+        except KeyboardInterrupt as e1:
             exit(1)
+        except Exception as e2:
+            logger.exception("transaction failed, check funds:\n" + str(e2))
+            time.sleep(5)
 
 
 main(store_eth)
